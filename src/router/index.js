@@ -1,7 +1,16 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
-
+import ItemManger from '../views/ItemManger.vue'
+import AdminLogin from '../views/AdminLogin.vue'
+import ShopManger from '../views/ShopManger.vue'
+import ShopDetails from '../views/ShopDetails.vue'
+import ShopLogin from '../views/ShopLogin.vue'
+import StationManger from '../views/StationManger.vue'
+import CabinetManger from '../views/CabinetManger.vue'
+import ListManger from '../views/ListManger.vue'
+import Item from '../views/Item.vue'
+import Buy from '../views/Buy.vue'
 Vue.use(VueRouter)
 
 const routes = [
@@ -11,12 +20,45 @@ const routes = [
     component: Home
   },
   {
-    path: '/about',
-    name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
+    path: '/AdminLogin',
+    name: '管理员登录',
+    component: AdminLogin
+  },{
+    path: '/ShopManger',
+    name: '商户管理',
+    component: ShopManger
+  },{
+    path: '/ShopDetails',
+    name: '商户详情',
+    component: ShopDetails
+  },{
+    path: '/ShopLogin',
+    name: '商户登录',
+    component: ShopLogin
+  },{
+    path: '/StationManger',
+    name: '站点管理',
+    component: StationManger
+  },{
+    path: '/CabinetManger',
+    name: '柜子管理',
+    component: CabinetManger
+  },{
+    path: '/ItemManger',
+    name: '商品管理',
+    component: ItemManger
+  },{
+    path: '/ListManger',
+    name: '订单管理',
+    component: ListManger
+  },{
+    path: '/Item',
+    name: '商品',
+    component: Item
+  },{
+    path: '/Buy',
+    name: '购买',
+    component: Buy
   }
 ]
 
