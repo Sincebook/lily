@@ -34,6 +34,7 @@
     <van-cell title="购买" is-link to="/Buy">
       <van-tag type="primary">静静</van-tag>
     </van-cell>
+      <van-button type="primary" @click="test">微信支付</van-button>
      <since-footer @click="test"/>
   </div>
 </template>
@@ -41,7 +42,7 @@
 <script>
 // @ is an alias to /src
 import SinceFooter from '../components/SinceFooter.vue';
-// import { final, onBridgeReady } from '../utils/wxpay';
+import { final } from '../utils/wxpay';
 import { testpay } from '../ajax/test'
 export default {
   name: "Home",
@@ -50,10 +51,11 @@ export default {
   },
   methods: {
     test() {
-      testpay().then(res => {
-        console.log(res);
+      testpay({serial_num:'1635679118951j1y'}).then(res => {
+        const { appId, timeStamp, nonceStr, wx_package, paySign } = res.data;
+        final(appId, timeStamp, nonceStr, wx_package, paySign)
       })
-      // final()
+      // 
       // onBridgeReady()
     }
   }
