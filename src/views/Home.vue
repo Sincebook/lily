@@ -52,7 +52,7 @@ export default {
   methods: {
     test() {
       testpay({serial_num:'1635679118951j1y'}).then(res => {
-        let packages = res.data.package
+        let packages = "prepay_id="+res.data.prepayid
         const { appid, timestamp, noncestr, sign } = res.data;
         final(appid, timestamp, noncestr, packages, sign)
       })
