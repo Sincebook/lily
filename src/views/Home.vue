@@ -4,7 +4,7 @@
     <div class="header">
       <img class="since" alt="Vue logo" src="../assets/logo.png" />
     </div>
-    <van-cell title="管理员登录" is-link to="/AdminManger">
+    <van-cell title="管理员登录" is-link to="/AdminLogin">
       <van-tag type="primary">RR</van-tag>
     </van-cell>
     <van-cell title="商户管理" is-link to="/ShopManger">
