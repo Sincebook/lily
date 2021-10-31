@@ -82,7 +82,7 @@
               <van-button
                 square
                 text="删除"
-                @click="onDelete(i)"
+                @click="onDelete(item.id)"
                 type="danger"
                 class="delete-button"
               />
@@ -166,7 +166,6 @@ import Vue from "vue";
 import {
   Icon,
   NavBar,
-  Toast,
   ContactCard,
   Card,
   SwitchCell,
@@ -263,7 +262,8 @@ export default {
   },
   methods: {
     onClickLeft() {
-      Toast("返回");
+      // Toast("返回");
+      this.$router.replace("/ShopManger");
     },
     onEdit() {
       // Toast("编辑");
@@ -299,7 +299,7 @@ export default {
       console.log(this.cabinet_num, this.cabinetName, this.size);
       // if (this.cabinet_num != "" && this.cabinetSize != "") {
       add({
-        shopper_id: "3",
+        shopper_id: this.$route.query.shopper_id,
         cabinet_num: this.cabinet_num,
         cabinet_name: this.cabinetName,
         size: this.size,
@@ -311,30 +311,31 @@ export default {
     },
     onDelete(i) {
       // Toast("删除");
-      console.log(i);
+      // console.log(i);
       deleteById({
-        id: 9,
+        id: i,
       }).then((res) => {
         console.log(res);
       });
-      // console.log(this.sites.length);
+      console.log(this.sites.length);
     },
     showPopup() {
       this.show = true;
     },
   },
   created: function () {
+    const id = this.$route.query.shopper_id;
     const that = this;
     // console.log("111");
     findById({
-      id: 3,
+      id: id,
     }).then((res) => {
       console.log(res.data);
       that.shoppers = res.data;
     });
 
     findByShopperId({
-      shopper_id: 3,
+      shopper_id: id,
     }).then((res) => {
       console.log(res.data);
       that.cabinet = res.data;
