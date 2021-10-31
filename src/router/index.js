@@ -40,7 +40,7 @@ const routes = [
     name: '站点管理',
     component: StationManger
   },{
-    path: '/CabinetManger',
+    path: '/CabinetManger/:cabinetId',
     name: '柜子管理',
     component: CabinetManger
   },{

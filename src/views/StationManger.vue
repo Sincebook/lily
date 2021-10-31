@@ -4,7 +4,7 @@
     <van-loading v-if="loading" style="padding: 1rem; display: flex; justify-content: center" />
     <template v-else>
       <van-list v-if="stations.length">
-        <van-cell v-for="station in stations" :key="station.id" is-link to="/CabinetManger" style="align-items: center">
+        <van-cell v-for="station in stations" :key="station.id" is-link :to="'/CabinetManger/' + station.id" style="align-items: center">
           <div class="lr">
             <div class="name">{{ station.name }}</div>
             <van-tag v-if="station.online" type="success">在线</van-tag>
@@ -18,11 +18,7 @@
       </van-list>
       <van-empty v-else description="未查询到站点" />
     </template>
-<!--    <van-tabbar v-model="active">-->
-<!--      <van-tabbar-item icon="home-o">标签</van-tabbar-item>-->
-<!--      <van-tabbar-item icon="search">标签</van-tabbar-item>-->
-<!--      <van-tabbar-item icon="friends-o">标签</van-tabbar-item>-->
-<!--    </van-tabbar>-->
+    <shopper-footer active="'home-o'"/>
   </div>
 </template>
 
@@ -30,6 +26,8 @@
 import Vue from 'vue';
 import {Cell, Empty, List, NavBar, Tabbar, TabbarItem, Toast} from 'vant';
 import 'vant/lib/index.css';
+import ShopperFooter from "@/components/ShopperFooter";
+import {cabinet_findByShopperId} from "@/ajax/StationManager";
 
 Vue.use(Cell);
 Vue.use(Empty);
@@ -40,104 +38,128 @@ Vue.use(TabbarItem);
 
 export default {
   name: "SiteManager",
+  components: {
+    ShopperFooter
+  },
   data() {
     return {
       loading: true,
-      stations: []
+      stations: [],
+      userId: 3,
     }
   },
   created() {
     let that = this;
-    setTimeout(function() {
-      that.stations = [
-        {
-          id: 0,
-          name: '智能柜名称',
-          online: true,
-          cellCount: 18,
-          cellAvailable: 13
-        },
-        {
-          id: 1,
-          name: '智能柜名称345R',
-          online: true,
-          cellCount: 66,
-          cellAvailable: 0
-        },
-        {
-          id: 2,
-          name: '智能柜名称6513',
-          online: false,
-          cellCount: 18,
-          cellAvailable: 13
-        },
-        {
-          id: 3,
-          name: 'SDGFHFX',
-          online: true,
-          cellCount: 18,
-          cellAvailable: 13
-        },
-        {
-          id: 4,
-          name: '智能柜 FGSH',
-          online: true,
-          cellCount: 18,
-          cellAvailable: 13
-        },
-        {
-          id: 5,
-          name: '智能柜名称',
-          online: true,
-          cellCount: 18,
-          cellAvailable: 13
-        },
-        {
-          id: 6,
-          name: '智能柜名称',
-          online: true,
-          cellCount: 18,
-          cellAvailable: 13
-        },
-        {
-          id: 7,
-          name: '智能柜名称',
-          online: true,
-          cellCount: 18,
-          cellAvailable: 13
-        },
-        {
-          id: 8,
-          name: '智能柜名称',
-          online: true,
-          cellCount: 18,
-          cellAvailable: 13
-        },
-        {
-          id: 9,
-          name: '智能柜名称',
-          online: true,
-          cellCount: 18,
-          cellAvailable: 13
-        },
-        {
-          id: 10,
-          name: '智能柜名称',
-          online: true,
-          cellCount: 18,
-          cellAvailable: 13
-        },
-        {
-          id: 11,
-          name: '智能柜名称',
-          online: true,
-          cellCount: 18,
-          cellAvailable: 13
-        },
-      ];
-      // that.stations = [];
-      that.loading = false;
-    }, 1000)
+    cabinet_findByShopperId({'shopper_id': that.userId})
+        .then(json => {
+          if (json.code !== '0') {
+            Toast(json.errMsg);
+            that.loading = false;
+            return;
+          }
+
+          that.stations = json.data.map(entry => ({
+            id: entry.cabinetNum,
+            name: '接口未返回名称',
+            online: !!parseInt(entry.online),
+            cellCount: entry.size,
+            cellAvailable: 0
+          }));
+          that.loading = false;
+        }).catch(() => {
+          Toast('网络错误');
+          that.loading = false;
+        })
+    // setTimeout(function() {
+    //   that.stations = [
+    //     {
+    //       id: 0,
+    //       name: '智能柜名称',
+    //       online: true,
+    //       cellCount: 18,
+    //       cellAvailable: 13
+    //     },
+    //     {
+    //       id: 1,
+    //       name: '智能柜名称345R',
+    //       online: true,
+    //       cellCount: 66,
+    //       cellAvailable: 0
+    //     },
+    //     {
+    //       id: 2,
+    //       name: '智能柜名称6513',
+    //       online: false,
+    //       cellCount: 18,
+    //       cellAvailable: 13
+    //     },
+    //     {
+    //       id: 3,
+    //       name: 'SDGFHFX',
+    //       online: true,
+    //       cellCount: 18,
+    //       cellAvailable: 13
+    //     },
+    //     {
+    //       id: 4,
+    //       name: '智能柜 FGSH',
+    //       online: true,
+    //       cellCount: 18,
+    //       cellAvailable: 13
+    //     },
+    //     {
+    //       id: 5,
+    //       name: '智能柜名称',
+    //       online: true,
+    //       cellCount: 18,
+    //       cellAvailable: 13
+    //     },
+    //     {
+    //       id: 6,
+    //       name: '智能柜名称',
+    //       online: true,
+    //       cellCount: 18,
+    //       cellAvailable: 13
+    //     },
+    //     {
+    //       id: 7,
+    //       name: '智能柜名称',
+    //       online: true,
+    //       cellCount: 18,
+    //       cellAvailable: 13
+    //     },
+    //     {
+    //       id: 8,
+    //       name: '智能柜名称',
+    //       online: true,
+    //       cellCount: 18,
+    //       cellAvailable: 13
+    //     },
+    //     {
+    //       id: 9,
+    //       name: '智能柜名称',
+    //       online: true,
+    //       cellCount: 18,
+    //       cellAvailable: 13
+    //     },
+    //     {
+    //       id: 10,
+    //       name: '智能柜名称',
+    //       online: true,
+    //       cellCount: 18,
+    //       cellAvailable: 13
+    //     },
+    //     {
+    //       id: 11,
+    //       name: '智能柜名称',
+    //       online: true,
+    //       cellCount: 18,
+    //       cellAvailable: 13
+    //     },
+    //   ];
+    //   // that.stations = [];
+    //   that.loading = false;
+    // }, 1000)
   },
   methods: {
     onClickLeft() {

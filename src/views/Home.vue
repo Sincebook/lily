@@ -34,19 +34,29 @@
     <van-cell title="购买" is-link to="/Buy">
       <van-tag type="primary">静静</van-tag>
     </van-cell>
-     <since-footer />
+     <since-footer @click="test"/>
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
 import SinceFooter from '../components/SinceFooter.vue';
-
+// import { final, onBridgeReady } from '../utils/wxpay';
+import { testpay } from '../ajax/test'
 export default {
   name: "Home",
   components: {
     SinceFooter,
   },
+  methods: {
+    test() {
+      testpay().then(res => {
+        console.log(res);
+      })
+      // final()
+      // onBridgeReady()
+    }
+  }
 };
 </script>
 <style scoped>
