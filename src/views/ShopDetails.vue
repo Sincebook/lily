@@ -344,7 +344,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .van-cell__value {
   position: relative;
   overflow: hidden;
