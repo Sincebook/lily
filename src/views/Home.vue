@@ -51,7 +51,8 @@ export default {
   },
   methods: {
     test() {
-      testpay({serial_num:'1635679118951j1y'}).then(res => {
+      testpay({serial_num:'1635699155569sbk'}).then(res => {
+        console.log(res)
         let packages = res.data.package
         const { appid, timestamp, noncestr, sign } = res.data;
         final(appid, timestamp, noncestr, packages, sign)
