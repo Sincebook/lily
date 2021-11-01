@@ -62,9 +62,9 @@ export default {
       console.log(serial_num);
       testpay({serial_num}).then(res => {
         console.log(res)
-        let packages = res.data.package
-        const { appid, timestamp, noncestr, sign } = res.data;
-        final(appid, timestamp, noncestr, packages, sign)
+        let  wx_package = res.data.package
+        const { appId, timeStamp, nonceStr, paySign } = res.data;
+        final(appId, timeStamp, nonceStr, wx_package, paySign)
       })
       // 
       // onBridgeReady()
