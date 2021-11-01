@@ -2,7 +2,7 @@
   <div>
     <van-nav-bar title="订单管理">
     </van-nav-bar>
-    <shopper-footer active="'completed'"/>
+    <shopper-footer active="'send-gift-o'"/>
   </div>
 </template>
 

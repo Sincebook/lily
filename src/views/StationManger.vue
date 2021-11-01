@@ -45,12 +45,12 @@ export default {
     return {
       loading: true,
       stations: [],
-      userId: 3,
     }
   },
   created() {
+    console.log(this.GLOBAL)
     let that = this;
-    cabinet_findByShopperId({'shopper_id': that.userId})
+    cabinet_findByShopperId({'shopper_id': sessionStorage.getItem('shopper_id')})
         .then(json => {
           if (json.code !== '0') {
             Toast(json.errMsg);

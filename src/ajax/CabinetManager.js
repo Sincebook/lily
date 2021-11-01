@@ -9,9 +9,9 @@ export function cabinet_addInfo(params) {
 }
 
 export function cabinetdoor_findByCabinetNum(params) {
-    return http.get('cabinetdoor/findByCabinetNum', params);
+    return http.get('api/cabinetdoor/findByCabinetNum', params);
 }
 
 export function goods_findByShopperId(params) {
-    return http.get('goods/findByShopperId', params);
+    return http.get('api/goods/findByShopperId', params);
 }
