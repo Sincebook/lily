@@ -7,8 +7,13 @@
         </template>
     </van-nav-bar>
 
-    <van-cell v-for="item in showData" :key="item.id" :title="item.name?item.name:'----'" :value="'站点：'+item.cabinetNum" :label="item.phone?item.phone:'--------'" :to="{path:'/ShopDetails',query:{shopper_id:item.id}}" />
-
+    <!-- <van-cell v-for="item in showData" :key="item.id" :title="item.name?item.name:'----'" :value="'站点：'+item.cabinetNum" :label="item.phone?item.phone:'--------'" :to="{path:'/ShopDetails',query:{shopper_id:item.id}}" /> -->
+    <van-swipe-cell v-for="item in showData" :key="item.id">
+        <van-cell :title="item.name?item.name:'----'" :value="'站点：'+item.cabinetNum" :label="item.phone?item.phone:'--------'" :to="{path:'/ShopDetails',query:{shopper_id:item.id}}" />
+        <template #right>
+            <van-button @click="deleteShopper(item.id)" square text="删除" type="danger" class="delete-button" />
+        </template>
+    </van-swipe-cell>
     <van-popup v-model="show" position="bottom" :style="{ height: '60%' }" @close="closePopup" :close-on-click-overlay="false" closeable>
         <van-nav-bar title="增加商户"></van-nav-bar>
         <van-form @submit="onSubmit">
@@ -26,12 +31,13 @@
 
 <script>
 import {
-    Toast
+    Toast,
+    Dialog
 } from 'vant'
 import {
     findAllShopper,
     addShopper,
-    // findByShopperId
+    deleteById
 } from '../ajax/admin_shopperApi'
 export default {
     name: 'ShopManger',
@@ -61,55 +67,32 @@ export default {
         }
     },
     created() {
-        findAllShopper({}).then(res => {
-                console.log(res);
-                if (res.code === '0') {
-                    this.showData = res.data
-                    console.log(this.showData);
-                    // for (const item in this.showData) {
-                    //     console.log(item, '.............');
-                    //     findByShopperId({
-                    //             shopper_id: item
-                    //         }).then(res1 => {
-                    //             console.log(res1);
-                    //             if (res1.code === '0') {
-                    //                 console.log('111', res1.data.length);
-                    //                 // this.showData[item]['length']=res1.data.length
-                    //                 this.$set(this.showData[item], 'length', res1.data.length)
-                    //                 console.log(this.showData);
-                    //             } else {
-                    //                 // this.showData[item]['length']=0
-                    //                 this.$set(this.showData[item], 'length', 0)
-                    //             }
-                    //         })
-                    //         .catch((err) => {
-                    //             console.log(err);
-                    //             return err;
-                    //         });
-                    // }
-                }
-            })
-            .catch((err) => {
-                console.log(err);
-                return err;
+        console.log(sessionStorage.getItem('admin'));
+        if (sessionStorage.getItem('admin')) {
+            findAllShopper({}).then(res => {
+                    console.log(res);
+                    if (res.code === '0') {
+                        this.showData = res.data
+                        console.log(this.showData);
+                    }
+                })
+                .catch((err) => {
+                    console.log(err);
+                    return err;
+                });
+        } else {
+            Dialog.alert({
+                message: '请先登录后再操作！',
+            }).then(() => {
+                this.$router.push('/AdminLogin')
             });
-        // findByShopperId({
-        //         shopper_id: 1
-        //     }).then(res => {
-        //         console.log(res);
-        //     })
-        //     .catch((err) => {
-        //         console.log(err);
-        //         return err;
-        //     });
-
+        }
     },
     methods: {
         addShopManger() {
             this.show = true
         },
         closePopup() {
-            console.log('close....');
             this.myData = {
                 name: '',
                 phone: '',
@@ -124,66 +107,51 @@ export default {
             addShopper(this.myData).then(res => {
                     console.log(res);
                     if (res.code === '0') {
-                        // findAllShopper({}).then(res => {
-                        //         console.log(res);
-                        //         if (res.code === '0') {
-                        //             this.showData = res.data
-                        //             console.log(this.showData);
-                        //         }
-                        //     })
-                        //     .catch((err) => {
-                        //         console.log(err);
-                        //         return err;
-                        //     });
-
-                        findAllShopper({}).then(res => {
-                                console.log(res);
-                                if (res.code === '0') {
-                                    this.showData = res.data
-                                    console.log(this.showData);
-                                    // for (const item in this.showData) {
-                                    //     console.log(item, '.............');
-                                    //     findByShopperId({
-                                    //             shopper_id: item
-                                    //         }).then(res1 => {
-                                    //             console.log(res1);
-                                    //             if (res1.code === '0') {
-                                    //                 console.log('111', res1.data.length);
-                                    //                 // this.showData[item]['length']=res1.data.length
-                                    //                 this.$set(this.showData[item], 'length', res1.data.length)
-                                    //                 console.log(this.showData);
-                                    //             } else {
-                                    //                 // this.showData[item]['length']=0
-                                    //                 this.$set(this.showData[item], 'length', 0)
-                                    //             }
-                                    //         })
-                                    //         .catch((err) => {
-                                    //             console.log(err);
-                                    //             return err;
-                                    //         });
-                                    // }
-                                }
-                            })
-                            .catch((err) => {
-                                console.log(err);
-                                return err;
-                            });
                         this.closePopup();
-                        Toast.success({
-                            message: '插入成功'
-                        })
-                        this.myData = {
-                            name: '',
-                            phone: '',
-                            phone2: '',
-                            phone3: ''
-                        }
+                        this.findAll(0);
                     } else {
                         this.closePopup();
                         Toast.fail({
                             message: res.errMsg,
                             position: 'bottom'
                         });
+                    }
+                })
+                .catch((err) => {
+                    console.log(err);
+                    return err;
+                });
+        },
+        deleteShopper(id) {
+            Dialog.confirm({
+                message: '确定删除吗？',
+            }).then(() => {
+                console.log(id);
+                deleteById({
+                    id: id
+                }).then(res => {
+                    console.log(res);
+                    if (res.code === '0') {
+                        this.findAll(1)
+                    }
+                })
+            });
+        },
+        findAll(flag) {
+            findAllShopper({}).then(res => {
+                    console.log(res);
+                    if (res.code === '0') {
+                        this.showData = res.data
+                        console.log(this.showData);
+                        if (flag === 0) {
+                            Toast.success({
+                                message: '插入成功'
+                            })
+                        } else if (flag === 1) {
+                            Toast.success({
+                                message: '删除成功'
+                            })
+                        }
                     }
                 })
                 .catch((err) => {
@@ -206,6 +174,8 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
+.delete-button {
+    height: 100%;
+}
 </style>
