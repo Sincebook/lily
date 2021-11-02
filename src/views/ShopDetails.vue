@@ -26,7 +26,7 @@
         show-cancel-button
         @confirm="confirm"
       >
-        <van-cell-group>
+        <van-form>
           <van-field
             v-model="shoppersname"
             label="姓名："
@@ -35,30 +35,37 @@
           />
           <van-field
             v-model="shoppersPhone"
+            type="tel"
             label="电话："
             placeholder="请输入商户电话"
+            :rules="phoneRule"
             required
           />
           <van-field
             v-model="shoppers.phone2"
             label="电话1："
             placeholder="请输入商户电话"
+            clearable
+            :rules="phoneRule2"
           />
           <van-field
             v-model="shoppers.phone3"
             label="电话2："
             placeholder="请输入商户电话"
+            clearable
+            :rules="phoneRule2"
           />
-        </van-cell-group>
+        </van-form>
       </van-dialog>
       <!-- 站点信息 -->
       <!-- <van-cell value="现有站点" /> -->
       <van-panel title="现有站点">
-        <div class="nowNums">
+        <div v-if="cabinet" class="nowNums">
           <van-swipe-cell v-bind:key="i" v-for="(item, i) in cabinet">
             <van-card
               class="goods-card"
               thumb="https://img01.yzcdn.cn/vant/ipad.jpeg"
+              @click="cabinetContent(item)"
             >
               <template #title>
                 <van-cell>
@@ -82,15 +89,28 @@
               <van-button
                 square
                 text="删除"
-                @click="onDelete(item.id)"
+                @click="onDelete(item.id, i)"
                 type="danger"
                 class="delete-button"
               />
             </template>
           </van-swipe-cell>
         </div>
+        <van-empty v-else description="暂时还没有站点哦" />
         <van-contact-card add-text="新增站点" type="add" @click="showPopup" />
       </van-panel>
+      <!-- 修改柜子名称 -->
+      <van-dialog
+        message-align="center"
+        v-model="showCabinet"
+        title="修改柜子名称"
+        show-cancel-button
+        @confirm="confirm1"
+      >
+        <van-cell-group>
+          <van-field v-model="cabinetName" label="柜子名称：" required />
+        </van-cell-group>
+      </van-dialog>
       <!-- 新增卡点 -->
       <van-popup
         v-model="show"
@@ -137,22 +157,22 @@
           <van-cell-group>
             <van-field
               v-model="shoppers.phone"
-              label="商户1"
-              placeholder="请输入商户电话"
+              label="电话1"
+              placeholder=""
               required
-              clearable
+              readonly
             />
             <van-field
               v-model="shoppers.phone2"
-              label="商户2"
-              placeholder="请输入商户电话"
-              clearable
+              label="电话2"
+              placeholder=""
+              readonly
             />
             <van-field
               v-model="shoppers.phone3"
-              label="商户3"
-              placeholder="请输入商户电话"
-              clearable
+              label="电话3"
+              placeholder=""
+              readonly
             />
           </van-cell-group>
         </div>
@@ -176,6 +196,7 @@ import {
   CellGroup,
   Panel,
   Dialog,
+  Toast,
 } from "vant";
 
 Vue.use(
@@ -192,7 +213,12 @@ Vue.use(
   Panel,
   Dialog
 );
-import { findByShopperId, deleteById, add } from "../ajax/cabinetAPI";
+import {
+  findByShopperId,
+  deleteById,
+  add,
+  modifyName,
+} from "../ajax/cabinetAPI";
 import { findById, modifyById } from "../ajax/shopperAPI";
 export default {
   name: "ShopDetails",
@@ -203,25 +229,34 @@ export default {
       // message: "1234",
       show: false,
       diashow: false,
+      showCabinet: false,
       cabinet_num: "",
       cabinetName: "",
+      cabinetid: "",
       size: "",
       shoppers: {
         id: "1",
-        name: "小明",
-        phone: "123456789",
+        name: "---",
+        phone: "-----------",
         phone2: "",
         phone3: "",
       },
       value: "",
-      cabinet: [
+      cabinet: [],
+      phoneRule: [
         {
-          id: "1",
-          shopperId: "123",
-          cabinetNum: "01",
-          size: "2",
-          online: "空",
-          uptime: "",
+          required: true,
+        },
+        {
+          pattern: /^1[3456789]\d{9}$/,
+          message: "手机号码格式错误！",
+        },
+      ],
+      phoneRule2: [
+        {
+          validator: this.checkPhone,
+          message: "手机号码格式错误！",
+          trigger: "onBlur",
         },
       ],
     };
@@ -261,6 +296,54 @@ export default {
     },
   },
   methods: {
+    checkPhone(value, rule) {
+      const reg = /^1[3|4|5|6|7|8|9]\d{9}$/;
+      console.log(rule, value);
+      if (!value) {
+        return true;
+      } else if (!reg.test(value)) {
+        return false;
+      } else {
+        return true;
+      }
+    },
+    cabinetContent(item) {
+      this.showCabinet = true;
+      console.log(item);
+      this.cabinetName = item.cabinetName;
+      this.cabinet_num = item.cabinetNum;
+      // Dialog.confirm({
+      //   title: "修改柜子名称",
+      //   message: `<slot>
+      //   </slot>`,
+      // })
+      // .then(() => {
+      //   // on confirm
+      // })
+      // .catch(() => {
+      //   // on cancel
+      // });
+    },
+    confirm1() {
+      modifyName({
+        cabinet_num: this.cabinet_num,
+        name: this.cabinetName,
+      }).then((res) => {
+        console.log(res);
+        if (res.code === "0") {
+          findByShopperId({
+            shopper_id: this.$route.query.shopper_id,
+          }).then((res) => {
+            this.cabinet = res.data;
+          });
+          Toast("修改成功");
+        } else {
+          Toast(res.errMsg);
+        }
+      });
+      this.cabinetName = "";
+      this.cabinet_num = "";
+    },
     onClickLeft() {
       // Toast("返回");
       this.$router.replace("/ShopManger");
@@ -286,9 +369,11 @@ export default {
         phone3: phone3,
       }).then((res) => {
         console.log(res);
-        // this.shoppers = res.data;
-        // console.log("修改");
-        // console.log(name, phone);
+        if (res.code == "0") {
+          Toast("修改成功");
+        } else {
+          Toast(res.errMsg);
+        }
       });
     },
     // onAdd() {
@@ -297,7 +382,6 @@ export default {
     onSubmit() {
       // console.log("submit", values);
       console.log(this.cabinet_num, this.cabinetName, this.size);
-      // if (this.cabinet_num != "" && this.cabinetSize != "") {
       add({
         shopper_id: this.$route.query.shopper_id,
         cabinet_num: this.cabinet_num,
@@ -305,17 +389,31 @@ export default {
         size: this.size,
       }).then((res) => {
         console.log(res);
+        if (res.code == "0") {
+          const cab1 = {
+            id: res.data.id,
+            shopperId: res.data.shopperId,
+            cabinetNum: res.data.cabinetNum,
+            size: res.data.size,
+            online: res.data.status,
+            uptime: res.data.uptime,
+          };
+          this.cabinet.push(cab1);
+          Toast("添加成功");
+        } else {
+          Toast(res.errMsg);
+        }
       });
-      // }
       this.show = false;
     },
-    onDelete(i) {
+    onDelete(id, i) {
       // Toast("删除");
-      // console.log(i);
+      console.log(i);
       deleteById({
-        id: i,
+        id: id,
       }).then((res) => {
         console.log(res);
+        this.cabinet.splice(i);
       });
       console.log(this.sites.length);
     },
@@ -344,7 +442,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .van-cell__value {
   position: relative;
   overflow: hidden;

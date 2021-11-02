@@ -16,3 +16,7 @@ export function deleteById(params) {
 export function findByShopperId(params) {
     return http.get('api/cabinet/findByShopperId', params);
 }
+// 修改柜子的名字
+export function modifyName(params) {
+    return http.post('api/cabinet/modifyName', params);
+}
