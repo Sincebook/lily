@@ -5,9 +5,10 @@
         <van-icon name="add-o" size="18" @click="jumpTO()" />
       </template>
     </van-nav-bar>
+    <van-empty v-if="!this.items" image="search" description="当前订单为空" />
     <div v-for="item in items" :key="item.id">
       <van-card
-        :price="item.price"
+        :price="(item.price / 100)"
         :desc="item.detail"
         :title="item.name"
         :thumb="item.img"
@@ -27,7 +28,8 @@
 <script>
 import ShopperFooter from "../components/ShopperFooter.vue";
 import { goods_findByShopperId } from "../ajax/CabinetManager";
-import { Dialog } from 'vant';
+import { goodsDel } from "../ajax/GoodApi";
+import { Dialog, Toast } from 'vant';
 export default {
   name: "ItemManger",
   components: { ShopperFooter },
@@ -37,13 +39,12 @@ export default {
     };
   },
   created() {
-    goods_findByShopperId({ shopper_id: "2" }).then((res) => {
+    goods_findByShopperId({ shopper_id: sessionStorage.getItem('shopper_id') }).then((res) => {
       console.log(res);
       this.items = res.data;
     });
   },
   methods: {
-    test() {},
     deleteGoods(_data) {
       console.log(_data);
       Dialog.confirm({
@@ -51,7 +52,12 @@ export default {
         message: "删除后不可恢复",
       })
         .then(() => {
-          // on confirm
+          goodsDel({id: _data}).then(res => {
+            if (res.code === '0') {
+              Toast.success('删除成功');
+              this.items = this.items.filter(item=>item.id!==_data)
+            }
+          })
         })
         .catch(() => {
           // on cancel

@@ -12,3 +12,7 @@ export function orders_Create(obj) {
 export function order_Get(obj) {
     return http.post('/api/orders/get', obj);
 }
+// 根据商户id查找订单
+export function orders_Find(obj) {
+    return http.get('/api/orders/findByShopperId', obj);
+}

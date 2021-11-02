@@ -12,7 +12,7 @@
           </div>
           <div class="lr">
             <div class="notes bl">{{ station.cellCount }} 柜门</div>
-            <div class="notes br">剩余柜子 {{ station.cellAvailable }}</div>
+            <div class="notes br">当前商品数量:{{ station.cellAvailable }}</div>
           </div>
         </van-cell>
       </van-list>
@@ -60,10 +60,10 @@ export default {
 
           that.stations = json.data.map(entry => ({
             id: entry.cabinetNum,
-            name: '接口未返回名称',
+            name: entry.cabinetName,
             online: !!parseInt(entry.online),
             cellCount: entry.size,
-            cellAvailable: 0
+            cellAvailable: entry.goodsNum
           }));
           that.loading = false;
         }).catch(() => {

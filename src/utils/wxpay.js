@@ -1,4 +1,4 @@
-function onBridgeReady(appId, timeStamp, nonceStr, wx_package, paySign) {
+function onBridgeReady(appId, timeStamp, nonceStr, wx_package, paySign, serial_num) {
   window.WeixinJSBridge.invoke(
     'getBrandWCPayRequest', {
       'appId': appId, // 公众号名称，由商户传入
@@ -11,6 +11,7 @@ function onBridgeReady(appId, timeStamp, nonceStr, wx_package, paySign) {
     function (res) {
       if (res.err_msg == 'get_brand_wcpay_request:ok' ) {
         console.log('pay ok');
+        window.location.href = 'http://lily.since88.cn/Buy?serial_num=' + serial_num;
         // 使用以上方式判断前端返回,微信团队郑重提示：
         // res.err_msg将在用户支付成功后返回ok，但并不保证它绝对可靠。
         // mui.alert('支付成功', function () {
@@ -20,7 +21,7 @@ function onBridgeReady(appId, timeStamp, nonceStr, wx_package, paySign) {
     });
 }
 
-function final(appId, timeStamp, nonceStr, wx_package, paySign) {
+function final(appId, timeStamp, nonceStr, wx_package, paySign, serial_num) {
   if (typeof WeixinJSBridge == 'undefined') {
     if (document.addEventListener) {
       console.log('document.addEventListener')
@@ -31,7 +32,7 @@ function final(appId, timeStamp, nonceStr, wx_package, paySign) {
       document.attachEvent('onWeixinJSBridgeReady', onBridgeReady);
     }
   } else {
-    onBridgeReady(appId, timeStamp, nonceStr, wx_package, paySign);
+    onBridgeReady(appId, timeStamp, nonceStr, wx_package, paySign, serial_num);
   }
 }
 

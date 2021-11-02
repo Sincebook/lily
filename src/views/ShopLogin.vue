@@ -95,7 +95,7 @@ export default {
                 // } else 
                 if (res.code === '0') {
                    console.log(res);
-                   sessionStorage.setItem('shopper_id', res.data.shoppper_id);
+                   sessionStorage.setItem('shopper_id', res.data.id);
                    this.$router.replace('/StationManger')
                 } else {
                     Toast.fail(res.errMsg)

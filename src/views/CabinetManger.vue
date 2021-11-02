@@ -141,6 +141,7 @@ export default {
     },
     submitMeta() {
       cabinet_addInfo({
+        cabinet_num: this.$route.params.cabinetId,
         text1: this.inputText1,
         text2: this.inputText2,
         text3: this.inputText3,
@@ -148,6 +149,9 @@ export default {
       }).then(json => {
         if (!json.ok) {
           Toast(json.errMsg);
+        } else {
+          Toast.success('修改成功');
+          this.subpage = 'manager';
         }
       })
     }
@@ -170,7 +174,7 @@ export default {
       }));
       that.loadingCabinet = false;
     });
-    goods_findByShopperId({shopper_id: 2}).then(json => {
+    goods_findByShopperId({shopper_id: sessionStorage.getItem('shopper_id')}).then(json => {
       if (json.code !== '0') {
         Toast(json.errMsg);
         that.loadingGoods = false;

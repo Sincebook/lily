@@ -1,14 +1,16 @@
 <template>
   <div class="order">
-    <van-nav-bar title="付款成功"></van-nav-bar>
-    <div class="icon">
+    <van-nav-bar title="支付结果"></van-nav-bar>
+    <div class="icon"> <br> <br> 
         <van-icon name="checked" />
-        <van-cell title="购买成功"  style="color:#6fc773;font-size:30px;"/>
+        <br><br>
+        <span style="color:#6fc773;font-size:24px;">购买成功</span>
     </div>
+    <br><br>
     <div class="message">
         <span>请填写信息</span>
         <van-form >
-        <van-field disabled v-model.trim="order.trace_num" name="trace_num" label="产品服务跟踪号" placeholder="1234356323423545657"/>
+        <van-field v-model.trim="order.trace_num" name="trace_num" label="产品服务跟踪号" placeholder="请填写产品服务跟踪号"/>
         <van-field v-model.trim="order.phone" type="tel" :rules="phoneRule" label="手机号" placeholder="请输入手机号" clearable required />
         <van-field v-model.trim="order.code" center clearable label="短信验证码" placeholder="请输入短信验证码" :rules="[{required:true}]" required>
             <template #button>
@@ -36,9 +38,9 @@ export default {
     data() {
         return {
             order: {
-                phone:"17612536396",
-                code:"2363",
-                trace_num: "15236",
+                phone:"",
+                code:"",
+                trace_num: "",
             },
             phoneRule: [{
                     required: true
@@ -94,6 +96,7 @@ export default {
                 phone:"13849867433",
                 code:"2363",
                 trace_num: "15236",
+                serial_num: this.$route.query.serial_num
             }).then(res => {
                 if(res.code==='0'){
                     console.log(res.data+"**********************************");
@@ -112,7 +115,7 @@ export default {
     text-align: center;
 }
 .van-icon-checked:before {
-    font-size: 60px;
+    font-size: 100px;
 }
 .van-icon:before {
     display: block;
