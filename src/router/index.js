@@ -11,6 +11,7 @@ import CabinetManger from '../views/CabinetManger.vue'
 import ListManger from '../views/ListManger.vue'
 import Item from '../views/Item.vue'
 import Buy from '../views/Buy.vue'
+import AddItem from '../views/AddItem'
 Vue.use(VueRouter)
 
 const routes = [
@@ -59,6 +60,10 @@ const routes = [
     path: '/Buy',
     name: '购买',
     component: Buy
+  },{
+    path: '/AddItem',
+    name: '添加商品',
+    component: AddItem
   }
 ]
 

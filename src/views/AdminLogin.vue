@@ -86,12 +86,8 @@ export default {
                 code: this.loginForm.sms
             }).then(res => {
                 console.log(res);
-                // if (res.code === '907_004') {
-                //     Toast.fail(res.errMsg)
-                // } else if (res.code === '907_002') {
-                //     Toast.fail(res.errMsg)
-                // } else 
                 if (res.code === '0') {
+                    sessionStorage.setItem('admin', this.loginForm.tel);
                     this.$router.push('/ShopManger')
                 } else {
                     Toast.fail(res.errMsg)

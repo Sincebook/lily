@@ -16,3 +16,19 @@ export function findById(params) {
 export function modifyById(params) {
     return http.post('/api/shopper/modifyById', params);
 }
+
+
+// 获取验证码
+export function code(obj) {
+    return http.post('/api/shopper/code', obj);
+}
+
+// 商户登录
+export function login(obj) {
+    return http.post('/api/shopper/login', obj);
+}
+
+// 根据商户id查找shopper
+export function findByShopperId(params) {
+    return http.get('/api/shopper/findByShopperId', params);
+}
