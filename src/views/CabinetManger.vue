@@ -20,8 +20,8 @@
                 <div class="info">{{ door.goodsId === 0 ? '空' : goodsCache[door.goodsId] ? goodsCache[door.goodsId].name : 'Loading...' }}</div>
               </div>
               <div class="buttons">
-                <van-button @click.stop type="danger" size="small">取出</van-button>
-                <van-button @click.stop="doorThatEditingGoods=door.doorId;showingPopup=true" type="info" size="small">存货</van-button>
+                <van-button @click.stop="popGoods(door.doorId)" type="danger">取出</van-button>
+                <van-button @click.stop="doorThatEditingGoods=door.doorId;showingPopup=true" plain type="info">存货</van-button>
               </div>
             </div>
           </van-cell>
@@ -70,7 +70,7 @@ import {
   cabinetdoor_add,
   cabinet_addInfo,
   cabinetdoor_findByCabinetNum,
-  goods_findByShopperId
+  goods_findByShopperId, cabinetdoor_get
 } from "@/ajax/CabinetManager";
 
 Vue.use(Button);
@@ -167,6 +167,23 @@ export default {
           this.subpage = 'manager';
         }
       })
+    },
+    popGoods(doorId) {
+      cabinetdoor_get({
+        cabinet_num:this.$route.params.cabinetId,
+        cabinetdoor_num: doorId
+      }).then(json => {
+        if (!json.ok) {
+          Toast(json.errMsg);
+        }
+
+        let got = this.doors.filter(e => e.doorId === doorId);
+        if (got.length === 0) {
+          Toast('修改已提交，但可能未被保存');
+        } else {
+          got[0].goodsId = parseInt(json.data.goodsId);
+        }
+      });
     }
   },
   created() {
