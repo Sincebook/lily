@@ -1,36 +1,13 @@
 <template>
   <div class="good">
-    <van-swipe :autoplay="3000" class="swiper">
-      <img :src="good.img" alt="" />
-    </van-swipe>
-    <van-card :price="good.price / 100" :title="good.name" />
-    <van-divider
-      dashed
-      contentPosition="center"
-      borderColor="#1989fa"
-      customStyle="color: #1989fa; border-color: #1989fa; font-size: 18px;"
-    >
-      ----------------------------------商品介绍----------------------------------
-    </van-divider>
-    <van-cell-group>
-      <van-cell title="" v-model="good.detail" />
-      <van-divider
-        dashed
-        contentPosition="center"
-        borderColor="#1989fa"
-        customStyle="color: #1989fa; border-color: #1989fa; font-size: 18px;"
-      >
-      </van-divider>
-      <img :src="good.img2" />
-      <img :src="good.img3" />
-    </van-cell-group>
-    <van-goods-action>
-      <van-goods-action-button
-        text="立即购买"
-        @click="createOrder"
-        class="buyBg"
-      />
-    </van-goods-action>
+    <img class="itemImg" :src="good.img" alt="" />
+    <van-cell center :title="good.name" title-class="name" :value="'￥'+good.price / 100" value-class="price" label="购买后，柜门将自动打开" />
+    <van-divider>商品详情</van-divider>
+    <p style="padding: 0 1em 1em;color:#666">{{good.detail}}</p>
+    <img :src="good.img2?good.img2:''" />
+    <img :src="good.img3" />
+    <br><br>
+    <van-button type="danger" block @click="createOrder" style="bottom:0;position:fixed">立即购买</van-button>
   </div>
 </template>
 <script>
@@ -136,9 +113,17 @@ export default {
 };
 </script>
 <style scoped>
-.swiper {
-  height: 20rem;
-  width: 100%;
+.price {
+    color: red;
+    font-size: 20px;
+    width: 100%;
+}
+.name {
+    font-size:16px;
+    color:#000;
+}
+.itemImg {
+    width: 100%;
 }
 .detailIamge {
   width: 100%;
@@ -148,27 +133,7 @@ export default {
   background-color: red;
   color: rgb(255, 255, 255);
 }
-.van-card__price {
-  position: absolute;
-  display: inline-block;
-  color: #f35f0a;
-  right: 2rem;
-  top: 1rem;
-  font-size: 35px;
-}
-.van-card__title {
-  max-height: 43px;
-  font-weight: 1000;
-  line-height: 43px;
-  font-size: 35px;
-}
-.van-card__price-integer {
-  font-size: 35px;
-  font-family: Avenir-Heavy, PingFang SC, Helvetica Neue, Arial, sans-serif;
-}
-.van-card__content {
-  min-height: 43px;
-}
+
 .van-divider {
   line-height: 2px;
 }

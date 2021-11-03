@@ -6,17 +6,21 @@
       <br />
       <van-icon name="checked" />
       <br /><br />
-      <span style="color: #6fc773; font-size: 24px">购买成功</span>
+      <span style="color: #6fc773; font-size: 20px">购买成功</span>
     </div>
     <br /><br />
     <div class="message">
-      <span>请填写信息</span>
+      <van-notice-bar
+  left-icon="volume-o"
+  text="因本品属于医疗产品，为了更好的跟踪服务，请您填写相关信息。"
+/>
       <van-form>
         <van-field
           v-model.trim="order.trace_num"
           name="trace_num"
-          label="产品服务跟踪号"
+          label="产品服务号"
           placeholder="请填写产品服务跟踪号"
+          required
         />
         <van-field
           v-model.trim="order.phone"
@@ -32,7 +36,7 @@
           center
           clearable
           label="短信验证码"
-          placeholder="请输入短信验证码"
+          placeholder="请输入验证码"
           :rules="[{ required: true }]"
           required
         >
@@ -43,14 +47,17 @@
           </template>
         </van-field>
       </van-form>
+      <div style="text-align:center;color:#888;font-size:14px"><br>产品服务热线:400-101-8151</div>
     </div>
-    <van-goods-action>
+    <van-button type="danger" round block @click="openDoor" style="bottom:0;position:fixed">打开柜门</van-button>
+  
+    <!-- <van-goods-action>
       <van-goods-action-button
         text="立即开柜"
         @click="openDoor"
         class="orderBg"
       />
-    </van-goods-action>
+    </van-goods-action> -->
   </div>
 </template>
 
@@ -121,7 +128,7 @@ export default {
       if (
         this.order.phone &&
         this.order.code &&
-        this.trace_num &&
+        this.order.trace_num &&
         this.$route.query.serial_num &&
         this.open
       ) {
@@ -160,59 +167,12 @@ export default {
   text-align: center;
 }
 .van-icon-checked:before {
-  font-size: 100px;
+  font-size: 120px;
 }
 .van-icon:before {
   display: block;
   margin: 0, auto;
   color: #6fc773;
 }
-.message {
-  text-align: center;
-  font-size: 18px;
-  background-color: #fcfae3;
-  margin-top: 10px;
-}
-.message > span {
-  display: inline-block;
-  padding: 5px;
-}
-.orderBg {
-  color: white;
-  background: red;
-}
-::v-deep .van-field__label {
-  -webkit-box-flex: 0;
-  -webkit-flex: none;
-  flex: none;
-  box-sizing: border-box;
-  width: 8em;
-  margin-right: 10px;
-  color: #646566;
-  text-align: left;
-  line-height: 20px;
-  height: 20px;
-  word-wrap: break-word;
-  font-size: 16px;
-}
-/* .van-cell {
-    display: block;
-    width: 100%;
-    font-size: 20px;
-    padding-top: 20px;
-} */
-::v-deep .van-field__control {
-  display: block;
-  box-sizing: border-box;
-  width: 100%;
-  min-width: 0;
-  padding: 0;
-  color: #323233;
-  line-height: inherit;
-  text-align: left;
-  background-color: transparent;
-  border: 0;
-  resize: none;
-  font-size: 16px;
-}
+
 </style>
