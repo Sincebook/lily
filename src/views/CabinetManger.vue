@@ -2,6 +2,9 @@
   <div>
     <template v-if="subpage === 'manager'">
       <van-nav-bar title="柜子管理">
+        <template #left>
+          <van-icon name="arrow-left" size="18" @click="goback" />
+        </template>
         <template #right>
           <van-icon name="setting-o" size="18" @click="miniRoute('config')" />
         </template>
@@ -17,8 +20,8 @@
                 <div class="info">{{ door.goodsId === 0 ? '空' : goodsCache[door.goodsId] ? goodsCache[door.goodsId].name : 'Loading...' }}</div>
               </div>
               <div class="buttons">
-                <van-button @click.stop type="danger">取出</van-button>
-                <van-button @click.stop="doorThatEditingGoods=door.doorId;showingPopup=true" plain type="info">存货</van-button>
+                <van-button @click.stop type="danger" size="small">取出</van-button>
+                <van-button @click.stop="doorThatEditingGoods=door.doorId;showingPopup=true" type="info" size="small">存货</van-button>
               </div>
             </div>
           </van-cell>
@@ -103,6 +106,9 @@ export default {
     }
   },
   methods: {
+    goback() {
+      this.$router.go(-1)
+    },
     miniRoute(target) {
       this.subpage = target;
     },
@@ -230,8 +236,8 @@ export default {
 .infobox > .img {
   row-span: 2;
   overflow: hidden;
-  height: 2.5rem;
-  width: 2.5rem;
+  height: 5rem;
+  width: 5rem;
   background: url('https://img01.yzcdn.cn/vant/custom-empty-image.png');
 }
 
@@ -244,7 +250,7 @@ export default {
   height: 100%;
   grid-auto-columns: auto;
   grid-auto-flow: column;
-  grid-column-gap: 0.5ch;
+  grid-column-gap: 1ch;
 }
 
 .popup {
