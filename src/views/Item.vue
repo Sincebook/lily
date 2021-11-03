@@ -73,18 +73,17 @@ export default {
     console.log(this.$route.query);
 
     cabinetdoor_look({
-      cabinet_num: "766186421",
-      cabinetdoor_num: "1",
+      cabinet_num: this.$route.query.cId,
+      cabinetdoor_num: this.$route.query.dId,
     })
       .then((json) => {
         console.log(json.data);
         if (json.code === "0") {
           this.good = json.data;
-          console.log(this.good.name + "%%%%%%%%%%%");
+          console.log(this.good.name);
         }
       })
       .catch((err) => {
-        console.log(err + "==================");
         return err;
       });
   },
