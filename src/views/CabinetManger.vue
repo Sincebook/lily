@@ -9,11 +9,11 @@
       <van-loading v-if="loadingCabinet" style="padding: 1rem; display: flex; justify-content: center" />
       <template v-else>
         <van-list>
-          <van-cell clickable v-for="door of doors" :key="door.doorId" @click="qrCode(door.qrCodeUrl)">
+          <van-cell clickable v-for="door of doors" :key="parseInt(door.doorId)" @click="qrCode(door.qrCodeUrl)">
             <div class="lr">
               <div class="infobox">
                 <div class="number">{{ door.doorId }}</div>
-                <div class="img" :style="{backgroundImage:  door.goodsId === 0 ? undefined : goodsCache[door.goodsId] ? goodsCache[door.goodsId].img : 'Loading...' }"></div>
+                <div class="img" :style="{backgroundImage: door.goodsId !== 0 && goodsCache[door.goodsId] ? 'url(' + goodsCache[door.goodsId].img + ')' : null }"></div>
                 <div class="info">{{ door.goodsId === 0 ? '空' : goodsCache[door.goodsId] ? goodsCache[door.goodsId].name : 'Loading...' }}</div>
               </div>
               <div class="buttons">
@@ -26,9 +26,9 @@
       </template>
       <van-popup v-model="showingPopup" position="bottom">
         <div class="popup">
-          <van-cell v-for="i of goodsItems" :key="i" clickable @click="clickGoods(doorThatEditingGoods, i.goodsId)">
+          <van-cell v-for="i of goodsItems" :key="parseInt(i)" clickable @click="clickGoods(doorThatEditingGoods, i.goodsId)">
             <div class="popup-item">
-              <div class="img" :style="{backgroundImage: i.img}"></div>
+              <div class="img" :style="{backgroundImage: 'url(' + i.img + ')'}"></div>
               <div class="title">{{ i.name }}</div>
               <div class="price">￥{{ i.price.toFixed(2) }}</div>
             </div>
@@ -127,13 +127,20 @@ export default {
     },
     clickGoods(doorId, goodsId) {
       cabinetdoor_add({
-        canbinet_num: this.$route.params.cabinetId,
+        cabinet_num: this.$route.params.cabinetId,
         cabinetdoor_num: doorId,
         goods_id: goodsId,
       }).then(json => {
         if (!json.ok) {
           Toast(json.errMsg);
           return;
+        }
+
+        let got = this.doors.filter(e => e.doorId === doorId);
+        if (got.length === 0) {
+          Toast('修改已提交，但可能未被保存');
+        } else {
+          got[0].goodsId = goodsId;
         }
 
         this.showingPopup = false;
@@ -201,6 +208,13 @@ export default {
   grid-template-columns: 1fr auto;
 }
 
+.img {
+  background-clip: content-box !important;
+  background-position: center !important;
+  background-size: cover !important;
+  background-repeat: no-repeat !important;
+}
+
 .infobox {
   display: flex;
   flex-direction: row;
@@ -218,10 +232,7 @@ export default {
   overflow: hidden;
   height: 2.5rem;
   width: 2.5rem;
-  background-image: url('https://img01.yzcdn.cn/vant/custom-empty-image.png');
-  background-clip: content-box;
-  background-position: center;
-  background-size: contain;
+  background: url('https://img01.yzcdn.cn/vant/custom-empty-image.png');
 }
 
 .infobox > .info {
