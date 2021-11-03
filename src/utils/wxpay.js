@@ -17,6 +17,8 @@ function onBridgeReady(appId, timeStamp, nonceStr, wx_package, paySign, serial_n
         // mui.alert('支付成功', function () {
         //   toIndex();
         // });
+      } else {
+        alert('用户取消支付');
       }
     });
 }

@@ -36,6 +36,7 @@
 <script>
 import Vue from "vue";
 import { Button, ImagePreview, Divider } from "vant";
+import { Toast, Dialog } from "vant";
 import { cabinetdoor_look } from "../ajax/cabinetdoorAPI";
 import { orders_Create } from "../ajax/ordersAPI";
 import "vant/lib/index.css";
@@ -81,6 +82,13 @@ export default {
         if (json.code === "0") {
           this.good = json.data;
           console.log(this.good.name);
+        } else {
+          Dialog.alert({
+            title: "当前货物已空",
+            message: "请扫描其他柜门上的二维码进行购买，如有问题请联系管理员",
+          }).then(() => {
+            Toast();
+          });
         }
       })
       .catch((err) => {
@@ -98,23 +106,31 @@ export default {
       });
     },
     createOrder() {
-      orders_Create({
-        wxuser_id: this.$route.query.uId,
-        cabinet_num: this.$route.query.cId,
-        cabinetdoor_num: this.$route.query.dId,
-      }).then((res) => {
-        if (res.code === "0") {
-          let serial_num = res.data.serialNum;
-          testpay({ serial_num }).then((res) => {
-            console.log(res);
-            let wx_package = res.data.package;
-            const { appId, timeStamp, nonceStr, paySign } = res.data;
-            final(appId, timeStamp, nonceStr, wx_package, paySign);
-          });
-          //
-          // onBridgeReady()
-        }
-      });
+      if (this.$route.query.uId) {
+        orders_Create({
+          wxuser_id: this.$route.query.uId,
+          cabinet_num: this.$route.query.cId,
+          cabinetdoor_num: this.$route.query.dId,
+        }).then((res) => {
+          if (res.code === "0") {
+            let serial_num = res.data.serialNum;
+            testpay({ serial_num }).then((res) => {
+              console.log(res);
+              let wx_package = res.data.package;
+              const { appId, timeStamp, nonceStr, paySign } = res.data;
+              final(appId, timeStamp, nonceStr, wx_package, paySign);
+            });
+          } else {
+            Dialog.alert({
+              title: res.errMsg,
+              message: "请扫描其他柜门上的二维码进行购买，如有问题请联系管理员",
+            }).then(() => {
+            });
+          }
+        });
+      } else {
+        Toast.fail("购买失败");
+      }
     },
   },
 };
