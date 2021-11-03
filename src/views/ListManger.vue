@@ -1,6 +1,6 @@
 <template>
   <div>
-    <van-nav-bar title="订单管理">
+    <van-nav-bar title="订单管理" fixed placeholder>
       <template #right>
         <van-icon name="add-o" size="18" @click="addTrace()" />
       </template>
@@ -35,7 +35,7 @@
     <van-popup v-model="show" position="bottom" :style="{ height: '40%' }"
       > <van-nav-bar title="添加产品跟踪号"/>
       
-      <van-form @submit="onSubmit">
+      <van-form>
         <van-field
           v-model="name"
           name="用户名"

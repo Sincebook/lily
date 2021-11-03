@@ -1,6 +1,6 @@
 <template>
   <div>
-    <van-nav-bar title="商品管理" right-plus >
+    <van-nav-bar title="商品管理" right-plus fixed placeholder>
       <template #right >
         <van-icon name="add-o" size="18" @click="jumpTO()" />
       </template>

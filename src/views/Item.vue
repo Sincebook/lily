@@ -95,7 +95,7 @@ export default {
               console.log(res);
               let wx_package = res.data.package;
               const { appId, timeStamp, nonceStr, paySign } = res.data;
-              final(appId, timeStamp, nonceStr, wx_package, paySign);
+              final(appId, timeStamp, nonceStr, wx_package, paySign, serial_num);
             });
           } else {
             Dialog.alert({
