@@ -93,9 +93,9 @@ export default {
         openDoor(values){
              console.log('openDoor', values);
             order_Get({
-                phone:this.phone,
-                code:this.code,
-                trace_num: this.trace_num,
+                phone:this.order.phone,
+                code:this.order.code,
+                trace_num: this.order.trace_num,
                 serial_num: this.$route.query.serial_num
             }).then(res => {
                 if(res.code==='0'){
