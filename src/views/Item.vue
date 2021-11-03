@@ -104,7 +104,7 @@ export default {
         cabinetdoor_num: this.$route.query.dId,
       }).then((res) => {
         if (res.code === "0") {
-          let serial_num = res.data.serial_num;
+          let serial_num = res.data.serialNum;
           testpay({ serial_num }).then((res) => {
             console.log(res);
             let wx_package = res.data.package;

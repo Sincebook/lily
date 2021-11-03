@@ -99,7 +99,7 @@ export default {
                 serial_num: this.$route.query.serial_num
             }).then(res => {
                 if(res.code==='0'){
-                    console.log(res.data+"**********************************");
+                    console.log(res.data);
                 }
             })
         }
