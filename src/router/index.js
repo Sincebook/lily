@@ -12,6 +12,8 @@ import ListManger from '../views/ListManger.vue'
 import Item from '../views/Item.vue'
 import Buy from '../views/Buy.vue'
 import AddItem from '../views/AddItem'
+import OkBuy from '../views/OkBuy'
+import Lucky from '../views/Lucky'
 Vue.use(VueRouter)
 
 const routes = [
@@ -64,6 +66,16 @@ const routes = [
     path: '/AddItem',
     name: '添加商品',
     component: AddItem
+  },
+  {
+    path: '/OkBuy',
+    name: '盲盒购买',
+    component: OkBuy
+  },
+  {
+    path: '/Lucky',
+    name: '盲盒',
+    component: Lucky
   }
 ]
 
