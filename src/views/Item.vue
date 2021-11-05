@@ -4,10 +4,10 @@
     <van-cell center :title="good.name" title-class="name" :value="'￥'+good.price / 100" value-class="price" label="购买后，柜门将自动打开" />
     <van-divider>商品详情</van-divider>
     <p style="padding: 0 1em 1em;color:#666">{{good.detail}}</p>
-    <img :src="good.img2?good.img2:''" />
-    <img :src="good.img3" />
-    <br><br>
-    <van-button type="danger" block @click="createOrder" style="bottom:0;position:fixed">立即购买</van-button>
+    <img :src="good.img2?good.img2:''" style="width:100%"/>
+    <img :src="good.img3" style="width:100%"/>
+    <br><br><br><br>
+    <van-button type="danger"  block @click="createOrder" style="bottom:0;position:fixed">立即购买</van-button>
   </div>
 </template>
 <script>
