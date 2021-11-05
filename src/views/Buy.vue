@@ -48,8 +48,8 @@
         </van-field>
       </van-form>
       <div style="text-align:center;color:#888;font-size:14px"><br>产品服务热线:400-101-8151</div>
-    </div>
-    <van-button type="danger" round block @click="openDoor" style="bottom:0;position:fixed">打开柜门</van-button>
+    </div><br><br><br><br><br>
+    <van-button type="danger" round block @click="openDoor">打开柜门</van-button>
   
     <!-- <van-goods-action>
       <van-goods-action-button
