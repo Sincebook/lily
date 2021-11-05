@@ -22,9 +22,17 @@
       placeholder="请输入详情"
       show-word-limit
     />
-    <van-field name="uploader" label="文件上传：">
+    <van-field name="uploader" label="商品图片：">
       <template #input>
-        <van-uploader v-model="uploader" />
+        <van-uploader
+          v-model="fileList"
+          :deletable="false"
+          :after-read="afterRead"
+          multiple
+          :max-count="3"
+          :max-size="1024 * 1024"
+          @oversize="onOversize"
+        />
       </template>
     </van-field>
     <div style="text-align: center">
@@ -47,7 +55,6 @@ export default {
   name: "AddItem",
   data() {
     return {
-      uploader: [],
       name: "",
       price: "",
       detail: "",
@@ -55,76 +62,66 @@ export default {
       img2: "",
       img3: "",
       shopper_id: "2",
+      fileList: [],
+      uploadNum: 0,
     };
   },
   methods: {
+    onOversize() {
+      Toast("文件大小不能超过 1MB");
+    },
+    afterRead(file) {
+      file.status = "uploading";
+      file.message = "上传中...";
+      goodsImg({ image: file.file }).then((res) => {
+        if (res.code === "0") {
+          file.status = "success";
+          this.fileList[this.uploadNum].url = res.data;
+          this.uploadNum++;
+        }
+      });
+    },
     jumpTo() {
       console.log("12321");
       this.$router.go(-1);
     },
     upload() {
       let that = this;
-
-      if (that.uploader.length >= 1 && this.name && this.price && this.detail) {
+      console.log(this.fileList);
+      if (that.fileList.length >= 1 && this.name && this.price && this.detail) {
         const toast = Toast.loading({
           duration: 0, // 持续展示 toast
           forbidClick: true,
           message: "上传中",
         });
-        goodsImg({ image: this.uploader[0].file }).then((res) => {
-          that.img = res.data;
-          if (this.uploader[1]) {
-            goodsImg({ image: this.uploader[1].file }).then((res1) => {
-              that.img2 = res1.data;
-              if (this.uploader[2]) {
-                goodsImg({ image: this.uploader[2].file }).then((res2) => {
-                  that.img3 = res2.data;
-                  goodsAdd({
-                    shopper_id: sessionStorage.getItem('shopper_id'),
-                    name: that.name,
-                    price: that.price * 100,
-                    detail: that.detail,
-                    img: that.img,
-                    img2: that.img2,
-                    img3: that.img3,
-                  }).then((res3) => {
-                    console.log(res3);
-                    toast.clear();
-                    if (res3.code === "0") {
-                      Toast.success("上传成功");
-                      this.reset();
-                    } else {
-                      Toast.fail("上传失败");
-                    }
-                  });
-                });
+        if (this.fileList[1]) {
+          if (this.fileList[2]) {
+            goodsAdd({
+              shopper_id: sessionStorage.getItem("shopper_id"),
+              name: that.name,
+              price: that.price * 100,
+              detail: that.detail,
+              img: that.fileList[0].url,
+              img2: that.fileList[1].url,
+              img3: that.fileList[2].url,
+            }).then((res3) => {
+              console.log(res3);
+              toast.clear();
+              if (res3.code === "0") {
+                Toast.success("上传成功");
+                this.reset();
               } else {
-                goodsAdd({
-                  shopper_id: sessionStorage.getItem('shopper_id'),
-                  name: that.name,
-                  price: that.price * 100,
-                  detail: that.detail,
-                  img: that.img,
-                  img2: that.img2,
-                }).then((res3) => {
-                  console.log(res3);
-                  toast.clear();
-                  if (res3.code === "0") {
-                    Toast.success("上传成功");
-                    this.reset();
-                  } else {
-                    Toast.fail("上传失败");
-                  }
-                });
+                Toast.fail("上传失败");
               }
             });
           } else {
             goodsAdd({
-              shopper_id: sessionStorage.getItem('shopper_id'),
+              shopper_id: sessionStorage.getItem("shopper_id"),
               name: that.name,
               price: that.price * 100,
               detail: that.detail,
-              img: that.img,
+              img: that.fileList[0].url,
+              img2: that.fileList[1].url,
             }).then((res3) => {
               console.log(res3);
               toast.clear();
@@ -136,20 +133,38 @@ export default {
               }
             });
           }
-        });
+        } else {
+          goodsAdd({
+            shopper_id: sessionStorage.getItem("shopper_id"),
+            name: that.name,
+            price: that.price * 100,
+            detail: that.detail,
+            img: that.fileList[0].url,
+          }).then((res3) => {
+            console.log(res3);
+            toast.clear();
+            if (res3.code === "0") {
+              Toast.success("上传成功");
+              this.reset();
+            } else {
+              Toast.fail("上传失败");
+            }
+          });
+        }
       } else {
         Toast("数据不能为空");
       }
     },
     reset() {
-      this.uploader = []
-      this.name = '';
-      this.price = '';
-      this.detail = '';
-      this.img = '';
-      this.img2 = '';
-      this.img3 = '';
-    }
+      this.fileList = [];
+      this.name = "";
+      this.price = "";
+      this.detail = "";
+      this.img = "";
+      this.img2 = "";
+      this.img3 = "";
+      this.uploadNum = 0
+    },
   },
 };
 </script>

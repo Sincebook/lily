@@ -34,42 +34,63 @@
     <van-cell title="购买" is-link to="/Buy">
       <van-tag type="primary">静静</van-tag>
     </van-cell>
-      <van-field v-model="list"></van-field>
-      <van-button type="primary" @click="test">微信支付</van-button>
-     <since-footer @click="test"/>
+    <van-field v-model="list"></van-field>
+    <van-button type="primary" @click="test">微信支付</van-button>
+    <since-footer @click="test" />
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import SinceFooter from '../components/SinceFooter.vue';
-import { final } from '../utils/wxpay';
-import { testpay } from '../ajax/test'
+import SinceFooter from "../components/SinceFooter.vue";
+import { final } from "../utils/wxpay";
+import { testpay } from "../ajax/test";
 export default {
   name: "Home",
-  data(){
+  data() {
     return {
-      list:''
-    }   
+      list: "",
+    };
   },
   components: {
     SinceFooter,
+  },
+  created() {
+    let num = 0;
+    let ok = 0;
+    let no = 0;
+    let condition = true;
+    for (let i = 0; i < 100000; i++) {
+      while (condition) {
+        let res = Math.random();
+        if (res < 0.1) {
+          break;
+        }
+        num++;
+      }
+      if (num == 1) ok++;
+      if (num < 6) no++;
+      // 
+      num = 0;
+    }
+    console.log("大于10次用了" + ok);
+    console.log("小于10次用了" + no);
   },
   methods: {
     test() {
       console.log(this.$data.list);
       let serial_num = this.$data.list;
       console.log(serial_num);
-      testpay({serial_num}).then(res => {
-        console.log(res)
-        let  wx_package = res.data.package
+      testpay({ serial_num }).then((res) => {
+        console.log(res);
+        let wx_package = res.data.package;
         const { appId, timeStamp, nonceStr, paySign } = res.data;
-        final(appId, timeStamp, nonceStr, wx_package, paySign)
-      })
-      // 
+        final(appId, timeStamp, nonceStr, wx_package, paySign);
+      });
+      //
       // onBridgeReady()
-    }
-  }
+    },
+  },
 };
 </script>
 <style scoped>

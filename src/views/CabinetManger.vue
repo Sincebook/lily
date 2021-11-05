@@ -253,8 +253,8 @@ export default {
 .infobox > .img {
   row-span: 2;
   overflow: hidden;
-  height: 5rem;
-  width: 5rem;
+  height: 4rem;
+  width: 4rem;
   background: url('https://img01.yzcdn.cn/vant/custom-empty-image.png');
 }
 

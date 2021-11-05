@@ -45,6 +45,7 @@ export default {
     return {
       loading: true,
       stations: [],
+      typeName:['医疗站', '智慧盲盒', '无人售货柜']
     }
   },
   created() {
@@ -57,109 +58,20 @@ export default {
             that.loading = false;
             return;
           }
-
+          console.log(json)
           that.stations = json.data.map(entry => ({
             id: entry.cabinetNum,
             name: entry.cabinetName,
             online: !!parseInt(entry.online),
             cellCount: entry.size,
-            cellAvailable: entry.goodsNum
+            cellAvailable: entry.goodsNum,
+            type:entry.type
           }));
           that.loading = false;
         }).catch(() => {
           Toast('网络错误');
           that.loading = false;
         })
-    // setTimeout(function() {
-    //   that.stations = [
-    //     {
-    //       id: 0,
-    //       name: '智能柜名称',
-    //       online: true,
-    //       cellCount: 18,
-    //       cellAvailable: 13
-    //     },
-    //     {
-    //       id: 1,
-    //       name: '智能柜名称345R',
-    //       online: true,
-    //       cellCount: 66,
-    //       cellAvailable: 0
-    //     },
-    //     {
-    //       id: 2,
-    //       name: '智能柜名称6513',
-    //       online: false,
-    //       cellCount: 18,
-    //       cellAvailable: 13
-    //     },
-    //     {
-    //       id: 3,
-    //       name: 'SDGFHFX',
-    //       online: true,
-    //       cellCount: 18,
-    //       cellAvailable: 13
-    //     },
-    //     {
-    //       id: 4,
-    //       name: '智能柜 FGSH',
-    //       online: true,
-    //       cellCount: 18,
-    //       cellAvailable: 13
-    //     },
-    //     {
-    //       id: 5,
-    //       name: '智能柜名称',
-    //       online: true,
-    //       cellCount: 18,
-    //       cellAvailable: 13
-    //     },
-    //     {
-    //       id: 6,
-    //       name: '智能柜名称',
-    //       online: true,
-    //       cellCount: 18,
-    //       cellAvailable: 13
-    //     },
-    //     {
-    //       id: 7,
-    //       name: '智能柜名称',
-    //       online: true,
-    //       cellCount: 18,
-    //       cellAvailable: 13
-    //     },
-    //     {
-    //       id: 8,
-    //       name: '智能柜名称',
-    //       online: true,
-    //       cellCount: 18,
-    //       cellAvailable: 13
-    //     },
-    //     {
-    //       id: 9,
-    //       name: '智能柜名称',
-    //       online: true,
-    //       cellCount: 18,
-    //       cellAvailable: 13
-    //     },
-    //     {
-    //       id: 10,
-    //       name: '智能柜名称',
-    //       online: true,
-    //       cellCount: 18,
-    //       cellAvailable: 13
-    //     },
-    //     {
-    //       id: 11,
-    //       name: '智能柜名称',
-    //       online: true,
-    //       cellCount: 18,
-    //       cellAvailable: 13
-    //     },
-    //   ];
-    //   // that.stations = [];
-    //   that.loading = false;
-    // }, 1000)
   },
   methods: {
     onClickLeft() {
