@@ -31,7 +31,7 @@
     <van-cell title="商品" is-link to="/Item">
       <van-tag type="primary">静静</van-tag>
     </van-cell>
-    <van-cell title="购买" is-link to="/Buy">
+    <van-cell title="购买" is-link to="/OKBuy">
       <van-tag type="primary">静静</van-tag>
     </van-cell>
     <van-field v-model="list"></van-field>
