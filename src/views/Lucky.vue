@@ -1,11 +1,17 @@
 <template>
   <div class="good">
-    <img class="itemImg" :src="good.img" alt="" />
-    <van-cell center :title="good.name" title-class="name" :value="'￥'+good.price / 100" value-class="price" label="购买后，柜门将自动打开" />
+    <img class="itemImg" src="../assets/1.jpg" alt="" />
+    <van-cell center title="Since文创智慧盲盒" title-class="name" value="￥4.98" value-class="price" label="购买后，柜门将随机打开" />
+    <!-- <van-notice-bar
+  left-icon="volume-o"
+  text="因本品属于医疗产品，为了更好的跟踪服务，请您填写相关信息。"
+/> -->
     <van-divider>商品详情</van-divider>
-    <p style="padding: 0 1em 1em;color:#666">{{good.detail}}</p>
-    <img :src="good.img2?good.img2:''" />
-    <img :src="good.img3" />
+    <p style="padding: 0 1em 1em;color:#666;font-size:14px">本品为幸运盲盒，由正版青壹坊惊喜盒组成。下单后将随机打开柜子，幸运者将有概率一键全开！同时提醒，有一定概率空奖。
+    </p>
+    
+    <img src="../assets/2.jpg" style="width:100%"/>
+    <img src="../assets/3.jpg" style="width:100%"/><br><br><br>
     <br><br>
     <van-button type="danger" block @click="createOrder" style="bottom:0;position:fixed">立即购买</van-button>
   </div>
@@ -14,10 +20,10 @@
 import Vue from "vue";
 import { Button, ImagePreview, Divider } from "vant";
 import { Toast, Dialog } from "vant";
-import { cabinetdoor_look } from "../ajax/cabinetdoorAPI";
-import { orders_Create } from "../ajax/ordersAPI";
+import { mhorders_Create } from "../ajax/ordersAPI";
+import {findReport, findReports } from "../ajax/reportApi";
 import "vant/lib/index.css";
-import { final } from "../utils/wxpay";
+import { final1 } from "../utils/wxpay";
 import { testpay } from "../ajax/test";
 Vue.use(Button);
 Vue.use(ImagePreview);
@@ -29,18 +35,6 @@ export default {
     return {
       cabinet_num: "593506563",
       cabinetdoor_num: "3",
-      good: [
-        {
-          id: 0,
-          shopper_id: 0,
-          name: "",
-          price: "",
-          detail: "",
-          img: "",
-          img2: "",
-          img3: "",
-        },
-      ],
       show: false,
       showQrCode: false,
       items: [...Array(20).keys()],
@@ -49,45 +43,19 @@ export default {
   //生命周期钩子函数，就是一个vue实例被生成后调用这个函数
   created() {
     console.log(this.$route.query);
-
-    cabinetdoor_look({
-      cabinet_num: this.$route.query.cId,
-      cabinetdoor_num: this.$route.query.dId,
+    findReports().then(res => {
+      console.log(res)
     })
-      .then((json) => {
-        console.log(json.data);
-        if (json.code === "0") {
-          this.good = json.data;
-          console.log(this.good.name);
-        } else {
-          Dialog.alert({
-            title: "当前货物已空",
-            message: "请扫描其他柜门上的二维码进行购买，如有问题请联系管理员",
-          }).then(() => {
-            Toast();
-          });
-        }
-      })
-      .catch((err) => {
-        return err;
-      });
+    findReport({wxuser_id:this.$route.query.uId}).then(res => {
+      console.log(res)
+    })
   },
   methods: {
-    // 轮播图预览
-    Preview_img(images, index) {
-      ImagePreview({
-        images: images, //图片数组
-        showIndex: true,
-        loop: false,
-        startPosition: index,
-      });
-    },
     createOrder() {
       if (this.$route.query.uId) {
-        orders_Create({
+        mhorders_Create({
           wxuser_id: this.$route.query.uId,
           cabinet_num: this.$route.query.cId,
-          cabinetdoor_num: this.$route.query.dId,
         }).then((res) => {
           if (res.code === "0") {
             let serial_num = res.data.serialNum;
@@ -95,7 +63,7 @@ export default {
               console.log(res);
               let wx_package = res.data.package;
               const { appId, timeStamp, nonceStr, paySign } = res.data;
-              final(appId, timeStamp, nonceStr, wx_package, paySign, serial_num);
+              final1(appId, timeStamp, nonceStr, wx_package, paySign, serial_num);
             });
           } else {
             Dialog.alert({

@@ -8,9 +8,16 @@ export function order_Code(obj) {
 export function orders_Create(obj) {
     return http.post('/api/orders/create', obj);
 }
+// 生成订单
+export function mhorders_Create(obj) {
+    return http.post('/api/orders/mhcreate', obj);
+}
 // 立即开柜
 export function order_Get(obj) {
     return http.post('/api/orders/get', obj);
+}
+export function mhorder_Get(obj) {
+    return http.post('/api/orders/mhget', obj);
 }
 // 根据商户id查找订单
 export function orders_Find(obj) {

@@ -9,7 +9,7 @@
       <span style="color: #6fc773; font-size: 20px">购买成功</span>
     </div>
     <br /><br />
-    <van-button type="danger" round block @click="openDoor" style="bottom:0;position:fixed">打开柜门</van-button>
+    <van-button type="danger" round block @click="openDoor" style="bottom:50;position:fixed">立即开奖</van-button>
     <!-- <van-goods-action>
       <van-goods-action-button
         text="立即开柜"
@@ -22,27 +22,12 @@
 
 <script>
 import { Toast, Dialog } from "vant";
-import { order_Get } from "../ajax/ordersAPI";
+import { mhorder_Get } from "../ajax/ordersAPI";
 export default {
   name: "OkBuy",
   data() {
     return {
-      order: {
-        phone: "",
-        code: "",
-        trace_num: "",
-      },
       open: true,
-      phoneRule: [
-        {
-          required: true,
-        },
-        {
-          pattern: /^1[3456789]\d{9}$/,
-          message: "手机号码格式错误！",
-        },
-      ],
-      info: "发送验证码",
       isClick: true,
     };
   },
@@ -54,24 +39,18 @@ export default {
     openDoor(values) {
       console.log("openDoor", values);
       if (
-        this.order.phone &&
-        this.order.code &&
-        this.order.trace_num &&
         this.$route.query.serial_num &&
         this.open
       ) {
-        order_Get({
-          phone: this.order.phone,
-          code: this.order.code,
-          trace_num: this.order.trace_num,
+        mhorder_Get({
           serial_num: this.$route.query.serial_num,
         }).then((res) => {
           if (res.code === "0") {
             this.open = false;
             console.log(res.data);
             Dialog.alert({
-              title: '柜门已打开',
-              message: "请取出货物后关闭柜门，谢谢您的光临！",
+              title: '盲盒抽取结果',
+              message: res.data,
             }).then(() => {
 
             });
@@ -80,7 +59,7 @@ export default {
           }
         });
       } else {
-        Toast.fail("请填写相关信息");
+        Toast.fail("结果已出");
       }
     },
   },

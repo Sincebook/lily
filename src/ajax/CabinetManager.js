@@ -19,3 +19,7 @@ export function cabinetdoor_get(params) {
 export function goods_findByShopperId(params) {
     return http.get('/api/goods/findByShopperId', params);
 }
+
+export function setRate(params) {
+    return http.post('/api/cabinetdoor/modifyrate', params);
+}

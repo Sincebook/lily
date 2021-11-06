@@ -102,7 +102,7 @@ export default {
       console.log(this.orders[0].traceNum === this.soso);
       // this.items = this.items.filter(item=>item.id!==_data);
       this.orders = this.orders.filter(
-        (order) => !order.traceNum.indexOf(this.soso)
+        (order) => order.traceNum
       );
     },
     addTrace() {
