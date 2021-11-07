@@ -35,7 +35,7 @@ export default {
     console.log(this.$route.query);
   },
   methods: {
-   
+    
     openDoor(values) {
       console.log("openDoor", values);
       if (
@@ -45,17 +45,26 @@ export default {
         mhorder_Get({
           serial_num: this.$route.query.serial_num,
         }).then((res) => {
+          this.open = false;
           if (res.code === "0") {
-            this.open = false;
             console.log(res.data);
             Dialog.alert({
               title: '盲盒抽取结果',
               message: res.data,
+              theme: 'round-button',
+              confirmButtonText:'再来一发'
             }).then(() => {
-
+              window.location.href = 'http://kaoyan.since88.cn/wechat/authorize?returnUrl=lily&cId=766186421&dId=0';
             });
           } else {
-              Toast.fail(res.errMsg);
+              Dialog.alert({
+              title: '盲盒抽取结果',
+              message: res.errMsg,
+              theme: 'round-button',
+              confirmButtonText:'再来一发'
+            }).then(() => {
+              window.location.href = 'http://kaoyan.since88.cn/wechat/authorize?returnUrl=lily&cId=766186421&dId=0';
+            });
           }
         });
       } else {
