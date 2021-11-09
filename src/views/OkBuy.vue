@@ -9,7 +9,14 @@
       <span style="color: #6fc773; font-size: 20px">购买成功</span>
     </div>
     <br /><br />
-    <van-button type="danger" round block @click="openDoor" style="bottom:50;position:fixed">立即开奖</van-button>
+    <van-button
+      type="danger"
+      round
+      block
+      @click="openDoor"
+      style="bottom: 50; position: fixed"
+      >立即开奖</van-button
+    >
     <!-- <van-goods-action>
       <van-goods-action-button
         text="立即开柜"
@@ -35,37 +42,51 @@ export default {
     console.log(this.$route.query);
   },
   methods: {
-    
     openDoor(values) {
       console.log("openDoor", values);
-      if (
-        this.$route.query.serial_num &&
-        this.open
-      ) {
+      if (this.$route.query.serial_num && this.open) {
         mhorder_Get({
           serial_num: this.$route.query.serial_num,
         }).then((res) => {
-          this.open = false;
-          if (res.code === "0") {
-            console.log(res.data);
-            Dialog.alert({
-              title: '盲盒抽取结果',
-              message: res.data,
-              theme: 'round-button',
-              confirmButtonText:'再来一发'
-            }).then(() => {
-              window.location.href = 'http://kaoyan.since88.cn/wechat/authorize?returnUrl=lily&cId=766186421&dId=0';
-            });
-          } else {
-              Dialog.alert({
-              title: '盲盒抽取结果',
-              message: res.errMsg,
-              theme: 'round-button',
-              confirmButtonText:'再来一发'
-            }).then(() => {
-              window.location.href = 'http://kaoyan.since88.cn/wechat/authorize?returnUrl=lily&cId=766186421&dId=0';
-            });
-          }
+          const toast = Toast.loading({
+            duration: 0, // 持续展示 toast
+            forbidClick: true,
+            message: "开奖倒计时 3 秒",
+          });
+
+          let second = 3;
+          const timer = setInterval(() => {
+            second--;
+            if (second) {
+              toast.message = `开奖倒计时 ${second} 秒`;
+            } else {
+              clearInterval(timer);
+              Toast.clear();
+              this.open = false;
+              if (res.code === "0") {
+                console.log(res.data);
+                Dialog.alert({
+                  title: "盲盒抽取结果",
+                  message: res.data,
+                  theme: "round-button",
+                  confirmButtonText: "再来一发",
+                }).then(() => {
+                  window.location.href =
+                    "http://kaoyan.since88.cn/wechat/authorize?returnUrl=lily&cId=766186421&dId=0";
+                });
+              } else {
+                Dialog.alert({
+                  title: "盲盒抽取结果",
+                  message: res.errMsg,
+                  theme: "round-button",
+                  confirmButtonText: "再来一发",
+                }).then(() => {
+                  window.location.href =
+                    "http://kaoyan.since88.cn/wechat/authorize?returnUrl=lily&cId=766186421&dId=0";
+                });
+              }
+            }
+          }, 1000);
         });
       } else {
         Toast.fail("结果已出");
@@ -90,5 +111,4 @@ export default {
   margin: 0, auto;
   color: #6fc773;
 }
-
 </style>
