@@ -5,7 +5,7 @@
       center
       title="Since文创智慧盲盒"
       title-class="name"
-      value="￥1.11"
+      value="￥4.98"
       value-class="price"
       label="购买后，柜门将随机打开"
     />
