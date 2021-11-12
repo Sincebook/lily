@@ -5,7 +5,7 @@
       center
       title="Since文创智慧盲盒"
       title-class="name"
-      value="￥4.98"
+      :value="'￥'+mhprice"
       value-class="price"
       label="购买后，柜门将随机打开"
     />
@@ -49,6 +49,7 @@ import { Button, ImagePreview, Divider } from "vant";
 import { Toast, Dialog } from "vant";
 import { mhorders_Create } from "../ajax/ordersAPI";
 import { findReport, findReports } from "../ajax/reportApi";
+import { findPrice } from "../ajax/cabinetAPI";
 import "vant/lib/index.css";
 import { final1 } from "../utils/wxpay";
 import { testpay } from "../ajax/test";
@@ -67,12 +68,19 @@ export default {
       items: [...Array(20).keys()],
       reports: [],
       lucky:'',
-      nickname:''
+      nickname:'',
+      mhprice:0
     };
   },
   //生命周期钩子函数，就是一个vue实例被生成后调用这个函数
   created() {
     console.log(this.$route.query);
+    findPrice({"cabinet_num": this.$route.query.cId}).then(res => {
+      if (res.code === "0") {
+        console.log(res);
+        this.mhprice = res.data / 100;
+      }
+    });
     findReports().then((res) => {
       if (res.code === "0") {
         console.log(res);

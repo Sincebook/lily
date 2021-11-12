@@ -20,3 +20,7 @@ export function findByShopperId(params) {
 export function modifyName(params) {
     return http.post('api/cabinet/modifyName', params);
 }
+// 查询盲盒单次抽奖价格
+export function findPrice(params) {
+    return http.get('api/cabinet/findPrice', params);
+}
