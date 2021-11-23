@@ -14,6 +14,7 @@ import Buy from '../views/Buy.vue'
 import AddItem from '../views/AddItem'
 import OkBuy from '../views/OkBuy'
 import Lucky from '../views/Lucky'
+import Setting from '../views/Setting'
 Vue.use(VueRouter)
 
 const routes = [
@@ -76,6 +77,11 @@ const routes = [
     path: '/Lucky',
     name: '盲盒',
     component: Lucky
+  },
+  {
+    path: '/Setting',
+    name: '设置',
+    component: Setting
   }
 ]
 
