@@ -14,9 +14,13 @@ import Buy from '../views/Buy.vue'
 import AddItem from '../views/AddItem'
 import OkBuy from '../views/OkBuy'
 import Lucky from '../views/Lucky'
+import EasyBuy from '../views/EasyBuy.vue'
+import Save from '../views/Save.vue'
+
 Vue.use(VueRouter)
 
 const routes = [
+ 
   {
     path: '/',
     name: 'Home',
@@ -76,6 +80,16 @@ const routes = [
     path: '/Lucky',
     name: '盲盒',
     component: Lucky
+  },
+  {
+    path: '/EasyBuy',
+    name: '无人售货柜',
+    component: EasyBuy
+  },
+  {
+    path: '/Save',
+    name: '储物柜',
+    component: Save
   }
 ]
 

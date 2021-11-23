@@ -24,3 +24,15 @@ export function modifyName(params) {
 export function findPrice(params) {
     return http.get('api/cabinet/findPrice', params);
 }
+//根据微信用户id和柜子编号查找柜门
+export function save_findByUid(params) {
+    return http.get('api/storage/findByUid', params);
+}
+//根据微信用户id和柜子编号存物
+export function saveAdd(params) {
+    return http.post('api/storage/add', params);
+}
+//储物柜取物
+export function saveGet(params) {
+    return http.post('api/storage/get', params);
+}
