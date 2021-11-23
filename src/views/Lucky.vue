@@ -26,14 +26,16 @@
         </van-swipe-item>
       </van-swipe>
     </van-notice-bar>
+     
     <van-divider>商品详情</van-divider>
-    <p style="padding: 0 1em 1em; color: #666; font-size: 14px">
+    <div style="padding: 0 1em 1em; color: #333; font-size: 14px">
       本品为幸运盲盒，由正版青壹坊惊喜盒组成。下单后将随机打开柜子，幸运者将有概率一键全开！同时提醒，有一定概率空奖。
-    </p>
-
+    </div>
+   <van-cell title="当前全开概率" value-class="pro" :value="pro+'‰'" />
     <img src="../assets/2.jpg" style="width: 100%" />
-    <img src="../assets/3.jpg" style="width: 100%" /><br /><br /><br />
-    <br /><br />
+    <img src="../assets/3.jpg" style="width: 100%" />
+    <since-footer/>
+    <br/><br/><br/>
     <van-button
       type="danger"
       block
@@ -53,12 +55,16 @@ import { findPrice } from "../ajax/cabinetAPI";
 import "vant/lib/index.css";
 import { final1 } from "../utils/wxpay";
 import { testpay } from "../ajax/test";
+import SinceFooter from "../components/SinceFooter.vue";
 Vue.use(Button);
 Vue.use(ImagePreview);
 Vue.use(Divider);
 export default {
   name: "Item",
   props: ["goodId"],
+  components:{
+    SinceFooter
+  },
   data() {
     return {
       cabinet_num: "593506563",
@@ -69,7 +75,8 @@ export default {
       reports: [],
       lucky:'',
       nickname:'',
-      mhprice:0
+      mhprice:0,
+      pro:1
     };
   },
   //生命周期钩子函数，就是一个vue实例被生成后调用这个函数
@@ -83,12 +90,13 @@ export default {
     });
     findReports().then((res) => {
       if (res.code === "0") {
-        console.log(res);
         this.reports = res.data;
       }
     });
     findReport({ wxuser_id: this.$route.query.uId }).then((res) => {
-      console.log(res);
+      for (let key in res.data) {
+        this.pro = key
+      }
     });
     Dialog.alert({
       title: Math.ceil(Math.random()*100),
@@ -166,5 +174,8 @@ export default {
 
 .van-divider {
   line-height: 2px;
+}
+.pro {
+  color: orange;
 }
 </style>

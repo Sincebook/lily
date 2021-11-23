@@ -34,8 +34,8 @@
     <van-cell title="购买" is-link to="/OKBuy">
       <van-tag type="primary">静静</van-tag>
     </van-cell>
-    <van-field v-model="list"></van-field>
-    <van-button type="primary" @click="test">微信支付</van-button>
+    <!-- <van-field v-model="list"></van-field>
+    <van-button type="primary" @click="test">微信支付</van-button> -->
     <since-footer @click="test" />
   </div>
 </template>
