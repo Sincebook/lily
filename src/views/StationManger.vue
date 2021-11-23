@@ -7,8 +7,15 @@
         <van-cell v-for="station in stations" :key="station.id" is-link :to="'/CabinetManger/' + station.id" style="align-items: center">
           <div class="lr">
             <div class="name">{{ station.name }}</div>
-            <van-tag v-if="station.online" type="success">在线</van-tag>
-            <van-tag v-else type="danger">离线</van-tag>
+            <div class="badges">
+              <van-tag plain v-if="station.type > 0 && station.type <= typeName.length" type="primary">
+                {{ typeName[station.type + 1] }}
+              </van-tag>
+              <van-tag plain v-else type="danger">未知类型</van-tag>
+
+              <van-tag v-if="station.online" type="success">在线</van-tag>
+              <van-tag v-else type="danger">离线</van-tag>
+            </div>
           </div>
           <div class="lr">
             <div class="notes bl">{{ station.cellCount }} 柜门</div>
@@ -45,7 +52,7 @@ export default {
     return {
       loading: true,
       stations: [],
-      typeName:['医疗站', '智慧盲盒', '无人售货柜']
+      typeName: ['盲盒', '医疗站', '储物柜', '售货柜']
     }
   },
   created() {
@@ -65,7 +72,7 @@ export default {
             online: !!parseInt(entry.online),
             cellCount: entry.size,
             cellAvailable: entry.goodsNum,
-            type:entry.type
+            type: entry.type
           }));
           that.loading = false;
         }).catch(() => {
@@ -88,6 +95,10 @@ export default {
 .lr {
   display: grid;
   grid-template-columns: 1fr auto;
+}
+
+.badges>*:not(:first-child) {
+  margin-left: 0.5ch;
 }
 
 .notes {

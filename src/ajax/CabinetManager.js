@@ -8,6 +8,14 @@ export function cabinet_addInfo(params) {
     return http.post('/api/cabinet/addInfo', params);
 }
 
+export function cabinet_findPrice(params) {
+    return http.get('/api/cabinet/findPrice', params);
+}
+
+export function cabinet_modifyPrice(params) {
+    return http.post('/api/cabinet/modifyPrice', params);
+}
+
 export function cabinetdoor_findByCabinetNum(params) {
     return http.get('/api/cabinetdoor/findByCabinetNum', params);
 }

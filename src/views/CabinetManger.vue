@@ -1,9 +1,15 @@
 <template>
   <div>
     <template v-if="subpage === 'manager'">
-      <van-nav-bar title="柜子管理">
+      <van-nav-bar :title="stationType === 1 ? '盲盒' :
+                           stationType === 2 ? '医疗站' :
+                           stationType === 3 ? '储物柜' :
+                           stationType === 4 ? '售货柜' : '未知类型'">
         <template #left>
           <van-icon name="arrow-left" size="18" @click="goback" />
+
+          <van-icon v-if="stationType === 1" name="gold-coin-o" size="18" @click="showingPriceDialog = true" />
+          <van-icon v-if="stationType === 4" name="qr" size="18" @click="qrCode(null)" /><!-- TODO 这里目前没有能拿到二维码的接口，先放着之后再实现 -->
         </template>
         <template #right>
           <van-icon name="setting-o" size="18" @click="miniRoute('config')" />
@@ -16,15 +22,18 @@
       <template v-else>
         <van-list>
           <van-cell
-            clickable
+            :clickable="stationType === 3"
             v-for="door of doors"
             :key="parseInt(door.doorId)"
-            @click="qrCode(door.qrCodeUrl)"
+            @click="stationType === 3 ? qrCode(door.qrCodeUrl) : void(0)"
           >
             <div class="lr">
               <div class="infobox">
                 <div class="number">{{ door.doorId }}</div>
-                <div
+                <div v-if="stationType === 3" :class="{img: true, occupied: !!door.goodsId, unoccupied: !door.goodsId}">
+                  {{ !!door.goodsId ? "有" : "无" }}
+                </div>
+                <div v-else
                   class="img"
                   :style="{
                     backgroundImage:
@@ -33,7 +42,10 @@
                         : null,
                   }"
                 ></div>
-                <div class="info">
+                <div v-if="stationType === 3" class="info">
+                  &nbsp;
+                </div>
+                <div v-else class="info">
                   {{
                     door.goodsId === 0
                       ? "空"
@@ -44,16 +56,17 @@
                 </div>
               </div>
               <div class="buttons">
-                <van-button @click.stop="setRateMed(door.doorId)" size="small"
-                  >设置概率</van-button
+                <van-button v-if="stationType === 1" @click.stop="setRateMed(door.doorId)" size="small"
+                  >概率</van-button
                 >
                 <van-button
                   @click.stop="popGoods(door.doorId)"
                   type="danger"
                   size="small"
-                  >取出</van-button
+                  >{{ stationType === 3 ? "打开" : "取出" }}</van-button
                 >
-                <van-button
+                <!-- TODO 是否需要更换被调用的接口？ -->
+                <van-button v-if="stationType !== 3"
                   @click.stop="
                     doorThatEditingGoods = door.doorId;
                     showingPopup = true;
@@ -134,10 +147,10 @@
       </van-form>
     </template>
     <van-dialog
-      v-model="show"
+      v-model="showingRateDialog"
       title="设置概率"
       show-cancel-button
-      @confirm="sub"
+      @confirm="submitRate"
     >
       <van-field
         v-model="rate"
@@ -145,6 +158,17 @@
         label="概率"
         placeholder="请输入概率"
       />
+    </van-dialog>
+    <van-dialog
+      v-model="showingPriceDialog"
+      title="设置抽奖价格"
+      show-cancel-button
+      @confirm="submitPrice">
+      <van-field
+        v-model="price"
+        name="价格"
+        label="价格"
+        placeholder="请输入抽奖价格" />
     </van-dialog>
   </div>
 </template>
@@ -159,16 +183,21 @@ import {
   goods_findByShopperId,
   cabinetdoor_get,
   setRate,
+  cabinet_findPrice, cabinet_modifyPrice,
 } from "@/ajax/CabinetManager";
 
 export default {
   name: "SiteManager",
   data() {
     return {
+      stationType: 1,  // TODO 如果确认没有相关接口，就改由路由传参
       subpage: "manager",
       showingPopup: false,
       showingQrCode: false,
+      showingRateDialog: false,
+      showingPriceDialog: false,
       rate: "",
+      price: 0,
       loadingMeta: true,
       loadingCabinet: true,
       loadingGoods: true,
@@ -180,7 +209,6 @@ export default {
       doorThatEditingGoods: 0,
       doorid:"",
       goodsCache: {},
-      show: false,
       inputText1: "",
       inputText2: "",
       inputText3: "",
@@ -269,19 +297,34 @@ export default {
     },
     setRateMed(doorId) {
       this.doorid = doorId
-      this.show = true;
+      this.showingRateDialog = true;
     
     },
-    sub() {
+    submitRate() {
       if (this.rate > 0 && this.rate < 100) {
         setRate({
           cabinet_num: this.$route.params.cabinetId,
           cabinetdoor_num: this.doorid,
           rate: this.rate,
         }).then((res) => {
-          if (res.code == "0") {
+          if (res.code === "0") {
             Toast.success("设置成功");
           }
+        });
+      }
+    },
+    submitPrice() {
+      if (this.price >= 0) {
+        let targetPrice = this.price;
+
+        cabinet_modifyPrice({
+          cabinet_num: this.$route.params.cabinetId,
+          mhprice: targetPrice * 100
+        }).then((json) => {
+          if (json.code !== "0") {
+            Toast("价格修改失败");
+          }
+          Toast.success("价格已修改为￥" + targetPrice);
         });
       }
     },
@@ -325,6 +368,13 @@ export default {
       });
       that.loadingGoods = false;
     });
+    cabinet_findPrice({
+      cabinet_num: that.$route.params.cabinetId
+    }).then((json) => {
+      if (json.code === "0") {
+        that.price = json.data / 100;
+      }
+    });
   },
 };
 </script>
@@ -362,16 +412,35 @@ export default {
   background: url("https://img01.yzcdn.cn/vant/custom-empty-image.png");
 }
 
+.infobox > .img.occupied {
+  background: hsl(120, 40%, 40%);
+  background-image: none;
+  line-height: 4rem;
+  text-align: center;
+  color: white;
+}
+
+.infobox > .img.unoccupied {
+  background: hsl(0, 40%, 40%);
+  background-image: none;
+  line-height: 4rem;
+  text-align: center;
+  color: white;
+}
+
 .infobox > .info {
   flex: auto;
 }
 
 .buttons {
-  display: grid;
+  display: flex;
   height: 100%;
-  grid-auto-columns: auto;
-  grid-auto-flow: column;
-  grid-column-gap: 1ch;
+  justify-content: center;
+  align-items: center;
+}
+
+.buttons > *:not(:first-child) {
+  margin-left: 1ch;
 }
 
 .popup {
