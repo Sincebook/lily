@@ -4,3 +4,7 @@ import http from '@/utils/http';
 export function cabinetdoor_look(params) {
     return http.post('api/cabinetdoor/look', params);
 }
+//查询所有柜门商品信息
+export function findInfoByCabinetDoor(params) {
+    return http.post('api/cabinetdoor/findInforByCabinetDoor', params);
+}

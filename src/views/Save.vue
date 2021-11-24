@@ -6,8 +6,8 @@
       <div>
          <div class="vantCard">
             <van-tag tabindex="" class="index">{{item.cabinetdoorNum}}.</van-tag>
-            <van-cell center title="货物" icon="send-gift-o" icon-class="image" >
-              <van-tag color="#c89f60" size="large" @click="drawOutThing(item.cabinetdoor_num)">取出</van-tag>
+            <van-cell center title="我的宝贝" icon="send-gift-o" icon-class="image" >
+              <van-tag color="#85da47" size="large"  @click="drawOutThing(item.cabinetdoorNum)">取出</van-tag>
             </van-cell>
          </div>
       </div>
@@ -39,7 +39,7 @@ export default {
   },
   methods: {
     saveFindAll(){
-      save_findByUid({wxuser_id : sessionStorage.getItem('wxuser_id'), cabinet_num : sessionStorage.getItem('cabinet_num')}).then((res) => {
+      save_findByUid({ wxuser_id: this.$route.query.uId,cabinet_num: this.$route.query.cId,}).then((res) => {
         console.log(res+"***********有数据吗");
         if(res.code==0){
           this.theItems = JSON.parse(JSON.stringify(res.data));
@@ -47,17 +47,16 @@ export default {
         }
       });
     },
-    drawOutThing(_data) {
-      console.log(_data);
+    drawOutThing:function(data) {
+      console.log(data);
       Dialog.confirm({
         title: "确定要取出吗？",
-        message: "取出后请关上柜门",
+        message: "点击确认后"+data+"号柜门将自动打开",
       })
        .then(() => {
-          saveGet({wxuser_id : sessionStorage.getItem('wxuser_id'), cabinet_num : sessionStorage.getItem('cabinet_num'),cabinetdoor_num:_data }).then(res=>{
+          saveGet({ wxuser_id: this.$route.query.uId,cabinet_num: this.$route.query.cId,cabinetdoor_num:data }).then(res=>{
             if(res.code==="0"){
               console.log(res.data)
-              Toast.success(res.data.cabinetdoorNum+"号柜门已打开，请将物品取出关上柜门")
               this.saveFindAll();
             }
           })
@@ -71,9 +70,13 @@ export default {
         saveAdd({wxuser_id :41, cabinet_num :766186421 }).then((res)=>{
           console.log("要存储了吗");
             if(res.data==="全柜已满"){  
-              Toast.fail("柜子已满！")
+              Toast.fail("柜子已满")
             }else{
-              Toast.success(res.data+"号柜门已打开，请将物品放好关上柜门")
+               Dialog.alert({
+                  title: "开柜成功",
+                  theme: "round-button",
+                  confirmButtonText: "确认",
+                }).then(() => {});
               this.saveFindAll();
             }
         })
