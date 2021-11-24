@@ -14,75 +14,88 @@ import Buy from '../views/Buy.vue'
 import AddItem from '../views/AddItem'
 import OkBuy from '../views/OkBuy'
 import Lucky from '../views/Lucky'
+import WithdrawManger from '../views/WithdrawManger'
+import Withdraw from '../views/Withdraw'
 import Setting from '../views/Setting'
 import IncomeManger from '../views/IncomeManger'
 import ShopperIncomeManger from '../views/ShopperIncomeManger'
 Vue.use(VueRouter)
 
-const routes = [{
-        path: '/',
-        name: 'Home',
-        component: Home
-    },
-    {
-        path: '/AdminLogin',
-        name: '管理员登录',
-        component: AdminLogin
-    }, {
-        path: '/ShopManger',
-        name: '商户管理',
-        component: ShopManger
-    }, {
+const routes = [
+  {
+    path: '/',
+    name: 'Home',
+    component: Home
+  },
+  {
+    path: '/AdminLogin',
+    name: '管理员登录',
+    component: AdminLogin
+  },{
+    path: '/ShopManger',
+    name: '商户管理',
+    component: ShopManger
+  },{
+    path: '/ShopDetails',
+    name: '商户详情',
+    component: ShopDetails
+  },{
+    path: '/ShopLogin',
+    name: '商户登录',
+    component: ShopLogin
+  },{
+    path: '/StationManger',
+    name: '站点管理',
+    component: StationManger
+  },{
+    path: '/CabinetManger/:cabinetId',
+    name: '柜子管理',
+    component: CabinetManger
+  },{
+    path: '/ItemManger',
+    name: '商品管理',
+    component: ItemManger
+  },{
+    path: '/ListManger',
+    name: '订单管理',
+    component: ListManger
+  },{
+    path: '/Item',
+    name: '商品',
+    component: Item
+  },{
+    path: '/Buy',
+    name: '购买',
+    component: Buy
+  },{
+    path: '/AddItem',
+    name: '添加商品',
+    component: AddItem
+  },
+  {
+    path: '/OkBuy',
+    name: '盲盒购买',
+    component: OkBuy
+  },
+  {
+    path: '/Lucky',
+    name: '盲盒',
+    component: Lucky
+  },
+  {
+    path: '/WithdrawManger',
+    name: '提现管理',
+    component: WithdrawManger
+  },
+  {
+    path: '/Withdraw',
+    name: '提现',
+    component: Withdraw
+  }, {
         path: '/IncomeManger',
         name: '收入管理',
         component: IncomeManger
-    }, {
-        path: '/ShopDetails',
-        name: '商户详情',
-        component: ShopDetails
-    }, {
-        path: '/ShopLogin',
-        name: '商户登录',
-        component: ShopLogin
-    }, {
-        path: '/StationManger',
-        name: '站点管理',
-        component: StationManger
-    }, {
-        path: '/CabinetManger/:cabinetId',
-        name: '柜子管理',
-        component: CabinetManger
-    }, {
-        path: '/ItemManger',
-        name: '商品管理',
-        component: ItemManger
-    }, {
-        path: '/ListManger',
-        name: '订单管理',
-        component: ListManger
-    }, {
-        path: '/Item',
-        name: '商品',
-        component: Item
-    }, {
-        path: '/Buy',
-        name: '购买',
-        component: Buy
-    }, {
-        path: '/AddItem',
-        name: '添加商品',
-        component: AddItem
-    },
-    {
-        path: '/OkBuy',
-        name: '盲盒购买',
-        component: OkBuy
-    },
-    {
-        path: '/Lucky',
-        name: '盲盒',
-        component: Lucky
-    },
+    }, 
     {
         path: '/ShopperIncomeManger',
         name: '收入分析',
