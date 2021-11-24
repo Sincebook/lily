@@ -1,7 +1,6 @@
 <template>
   <div class="WithdrawManger">
-    <van-nav-bar title="提现管理" left-arrow @click-left="clickleft()">
-    </van-nav-bar>
+    <van-nav-bar title="提现管理"> </van-nav-bar>
     <!-- <van-cell center v-for="item in findAllData" :key="item.id">
       <template #title>
         <span class="custom-title"
@@ -15,14 +14,14 @@
         <van-button plain type="info">打款</van-button>
       </template>
     </van-cell> -->
-    <van-cell>
+    <van-cell style="font-size: 12px !important; color: black !important">
       <template #title>
         <div v-for="(item, num) in findAllData" :key="num">
           <van-grid :border="false" column-num="3" :center="false">
-            <van-grid-item style="width: 25% !important">
+            <van-grid-item>
               <div>{{ item.uptime }}</div>
             </van-grid-item>
-            <van-grid-item style="width: 50% !important">
+            <van-grid-item>
               <div style="text-align: left !important">
                 <div>提现金额：{{ item.money / 100 }}</div>
                 <div>商户id：{{ item.shopperId }}</div>
@@ -31,7 +30,7 @@
             </van-grid-item>
             <!-- <span v-if="k.status == 0" style="color: red">未打款</span>
               <span v-else>已打款</span> -->
-            <van-grid-item style="width: 25% !important">
+            <van-grid-item>
               <div style="text-align: center !important">
                 <van-button
                   plain
@@ -58,16 +57,21 @@
     >
       <img :src="image" style="width: 50%; margin-top: 10px" />
     </van-dialog>
+    <admin-footer active="'cash-back-record'" />
   </div>
 </template>
 
 <script>
+import AdminFooter from "../components/AdminFooter";
 import Vue from "vue";
 import { NavBar, Card, ContactCard, Toast } from "vant";
 import { findAll, payToShopper } from "../ajax/withdrawAPI";
 import { look } from "../ajax/ordersAPI";
 Vue.use(NavBar, Card, ContactCard);
 export default {
+  components: {
+    AdminFooter,
+  },
   data() {
     return {
       show: false,
@@ -139,4 +143,8 @@ export default {
 </script>
 
 <style scoped>
+.van-dialog__content {
+  margin: auto !important;
+  text-align: center !important;
+}
 </style>
