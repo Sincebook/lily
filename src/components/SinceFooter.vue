@@ -3,6 +3,7 @@
     <br><br>
     <small>森思公司</small><br>
     <small>Copyright © 2014-2022</small>
+    <small> 加盟热线：18638732919</small>
   </div>
 </template>
 

@@ -2,7 +2,7 @@
   <van-tabbar route v-model="active" placeholder>
     <van-tabbar-item name="home-o" icon="home-o" to="/StationManger">站点管理</van-tabbar-item>
     <van-tabbar-item name="send-gift-o" icon="send-gift-o" to="/ItemManger">商品管理</van-tabbar-item>
-    <van-tabbar-item name="completed" icon="completed" to="/ListManger">订单管理</van-tabbar-item>
+    <van-tabbar-item name="completed" icon="completed" to="/Setting">管理中心</van-tabbar-item>
   </van-tabbar>
 </template>
 

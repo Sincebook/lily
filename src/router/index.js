@@ -14,6 +14,7 @@ import Buy from '../views/Buy.vue'
 import AddItem from '../views/AddItem'
 import OkBuy from '../views/OkBuy'
 import Lucky from '../views/Lucky'
+import Setting from '../views/Setting'
 import IncomeManger from '../views/IncomeManger'
 import ShopperIncomeManger from '../views/ShopperIncomeManger'
 Vue.use(VueRouter)
@@ -86,6 +87,11 @@ const routes = [{
         path: '/ShopperIncomeManger',
         name: '收入分析',
         component: ShopperIncomeManger
+    },
+    {
+      path: '/Setting',
+      name: '设置',
+      component: Setting
     }
 ]
 
