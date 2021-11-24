@@ -3,13 +3,13 @@
     <template v-if="subpage === 'manager'">
       <van-nav-bar :title="stationType === 1 ? '盲盒' :
                            stationType === 2 ? '医疗站' :
-                           stationType === 3 ? '储物柜' :
-                           stationType === 4 ? '售货柜' : '未知类型'">
+                           stationType === 3 ? '售货柜' :
+                           stationType === 4 ? '储物柜' : '未知类型'">
         <template #left>
           <van-icon name="arrow-left" size="18" @click="goback" />
 
           <van-icon v-if="stationType === 1" name="gold-coin-o" size="18" @click="showingPriceDialog = true" />
-          <van-icon v-if="stationType === 4" name="qr" size="18" @click="qrCode(null)" /><!-- TODO 这里目前没有能拿到二维码的接口，先放着之后再实现 -->
+          <van-icon v-if="stationType === 3" name="qr" size="18" @click="qrCode(null)" /><!-- TODO 这里目前没有能拿到二维码的接口，先放着之后再实现 -->
         </template>
         <template #right>
           <van-icon name="setting-o" size="18" @click="miniRoute('config')" />
@@ -22,15 +22,15 @@
       <template v-else>
         <van-list>
           <van-cell
-            :clickable="stationType === 3"
+            :clickable="stationType === 4"
             v-for="door of doors"
             :key="parseInt(door.doorId)"
-            @click="stationType === 3 ? qrCode(door.qrCodeUrl) : void(0)"
+            @click="stationType === 4 ? qrCode(door.qrCodeUrl) : void(0)"
           >
             <div class="lr">
               <div class="infobox">
                 <div class="number">{{ door.doorId }}</div>
-                <div v-if="stationType === 3" :class="{img: true, occupied: !!door.goodsId, unoccupied: !door.goodsId}">
+                <div v-if="stationType === 4" :class="{img: true, occupied: !!door.goodsId, unoccupied: !door.goodsId}">
                   {{ !!door.goodsId ? "有" : "无" }}
                 </div>
                 <div v-else
@@ -42,7 +42,7 @@
                         : null,
                   }"
                 ></div>
-                <div v-if="stationType === 3" class="info">
+                <div v-if="stationType === 4" class="info">
                   &nbsp;
                 </div>
                 <div v-else class="info">
@@ -63,10 +63,9 @@
                   @click.stop="popGoods(door.doorId)"
                   type="danger"
                   size="small"
-                  >{{ stationType === 3 ? "打开" : "取出" }}</van-button
+                  >{{ stationType === 4 ? "打开" : "取出" }}</van-button
                 >
-                <!-- TODO 是否需要更换被调用的接口？ -->
-                <van-button v-if="stationType !== 3"
+                <van-button v-if="stationType !== 4"
                   @click.stop="
                     doorThatEditingGoods = door.doorId;
                     showingPopup = true;
