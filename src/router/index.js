@@ -14,6 +14,8 @@ import Buy from '../views/Buy.vue'
 import AddItem from '../views/AddItem'
 import OkBuy from '../views/OkBuy'
 import Lucky from '../views/Lucky'
+import WithdrawManger from '../views/WithdrawManger'
+import Withdraw from '../views/Withdraw'
 Vue.use(VueRouter)
 
 const routes = [
@@ -76,6 +78,16 @@ const routes = [
     path: '/Lucky',
     name: '盲盒',
     component: Lucky
+  },
+  {
+    path: '/WithdrawManger',
+    name: '提现管理',
+    component: WithdrawManger
+  },
+  {
+    path: '/Withdraw',
+    name: '提现',
+    component: Withdraw
   }
 ]
 
