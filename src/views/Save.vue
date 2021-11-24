@@ -1,7 +1,7 @@
 <template>
   <div>
     <van-nav-bar title="储物柜" right-plus fixed placeholder></van-nav-bar>
-    <van-empty v-if="!this.theItems" image="search" description="当前商品列表为空" />
+    <van-empty v-if="!this.theItems" image="search" description="当前还未存储物品" />
     <div v-for="item in theItems" :key="item.cabinetdoorNum">
       <div>
          <div class="vantCard">
