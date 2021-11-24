@@ -9,7 +9,7 @@
             <div class="name">{{ station.name }}</div>
             <div class="badges">
               <van-tag plain v-if="station.type > 0 && station.type <= typeName.length" type="primary">
-                {{ typeName[station.type + 1] }}
+                {{ typeName[station.type - 1] }}
               </van-tag>
               <van-tag plain v-else type="danger">未知类型</van-tag>
 
@@ -52,7 +52,7 @@ export default {
     return {
       loading: true,
       stations: [],
-      typeName: ['盲盒', '医疗站', '储物柜', '售货柜']
+      typeName: ['医疗站', '盲盒', '售货柜', '储物柜']
     }
   },
   created() {
