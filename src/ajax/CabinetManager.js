@@ -16,8 +16,8 @@ export function cabinet_findPrice(params) {
     return http.get('/api/cabinet/findPrice', params);
 }
 
-export function cabinet_getQRCode(params) {
-    return http.get('/api/cabinet/getQRCode', params);
+export function cabinet_getQRcode(params) {
+    return http.post('/api/cabinet/getQRcode', params);
 }
 
 export function cabinet_modifyPrice(params) {

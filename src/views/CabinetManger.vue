@@ -1,8 +1,9 @@
 <template>
   <div>
     <template v-if="subpage === 'manager'">
-      <van-nav-bar :title="stationType === 2 ? '盲盒' :
+      <van-nav-bar :title="loadingMeta       ? '正在加载' :
                            stationType === 1 ? '医疗站' :
+                           stationType === 2 ? '盲盒' :
                            stationType === 3 ? '售货柜' :
                            stationType === 4 ? '储物柜' : '未知类型'">
         <template #left>
@@ -185,7 +186,7 @@ import {
   goods_findByShopperId,
   cabinetdoor_get,
   setRate,
-  cabinet_findPrice, cabinet_modifyPrice, cabinet_findInforByCabinetNum, cabinet_getQRCode,
+  cabinet_findPrice, cabinet_modifyPrice, cabinet_findInforByCabinetNum, cabinet_getQRcode,
 } from "@/ajax/CabinetManager";
 
 export default {
@@ -246,9 +247,9 @@ export default {
       }
 
       let that = this;
-      this.qrCodeLoadingMsg = "服务器正在生成二维码";
+      this.qrCodeLoadingMsg = "正在生成二维码";
       this.showingQrCode = true;
-      cabinet_getQRCode({
+      cabinet_getQRcode({
         text: this.meta.qrContent
       }).then((json) => {
         if (!json.ok) {
