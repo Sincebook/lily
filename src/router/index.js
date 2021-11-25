@@ -14,6 +14,9 @@ import Buy from '../views/Buy.vue'
 import AddItem from '../views/AddItem'
 import OkBuy from '../views/OkBuy'
 import Lucky from '../views/Lucky'
+import EasyBuy from '../views/EasyBuy.vue'
+import Save from '../views/Save.vue'
+import EasyOkBuy from '../views/EasyOkBuy.vue'
 import WithdrawManger from '../views/WithdrawManger'
 import Withdraw from '../views/Withdraw'
 import Setting from '../views/Setting'
@@ -22,6 +25,7 @@ import ShopperIncomeManger from '../views/ShopperIncomeManger'
 Vue.use(VueRouter)
 
 const routes = [
+ 
   {
     path: '/',
     name: 'Home',
@@ -81,6 +85,21 @@ const routes = [
     path: '/Lucky',
     name: '盲盒',
     component: Lucky
+  },
+  {
+    path: '/EasyBuy',
+    name: '无人售货柜',
+    component: EasyBuy
+  },
+  {
+    path: '/Save',
+    name: '储物柜',
+    component: Save
+  },
+  {
+    path: '/EasyOkBuy',
+    name: '无人售货购买',
+    component: EasyOkBuy
   },
   {
     path: '/WithdrawManger',
