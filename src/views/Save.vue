@@ -10,6 +10,7 @@
               <van-tag color="#85da47" size="large"  @click="drawOutThing(item.cabinetdoorNum)">取出</van-tag>
             </van-cell>
          </div>
+         <div class="divide"></div>
       </div>
     </div>
        
@@ -137,5 +138,8 @@ export default {
     width: 60%;
     
     
+}
+.divide{
+  border-bottom: 2px solid #f6f7f8;
 }
 </style>

@@ -35,7 +35,7 @@ export default {
   methods: {
     easyBuyFindAll(){
       // sessionStorage.getItem('cabinet_num')
-      findInfoByCabinetDoor({ cabinet_num : 766186421}).then((res) => {
+      findInfoByCabinetDoor({ cabinet_num : this.$route.query.cId}).then((res) => {
         console.log(res+"***********有数据吗");
         if(res.code==0){
           this.allGoods = JSON.parse(JSON.stringify(res.data));
@@ -122,6 +122,6 @@ export default {
   padding-right:16px ;
 }
 .divide{
-  border-bottom: 1px solid #f6f7f8;
+  border-bottom: 2px solid #f6f7f8;
 }
 </style>
