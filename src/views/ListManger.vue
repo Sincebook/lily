@@ -58,19 +58,16 @@
         </div>
       </van-form>
     </van-popup>
-    <shopper-footer active="'send-gift-o'" />
   </div>
 </template>
 
 <script>
-import ShopperFooter from "../components/ShopperFooter.vue";
 import { orders_Find } from "../ajax/ordersAPI";
 import { trace_add } from "../ajax/traceApi";
 import { Toast } from 'vant';
 import dayjs from "dayjs";
 export default {
   name: "ListManger",
-  components: { ShopperFooter },
   data() {
     return {
       soso: "",

@@ -17,7 +17,11 @@ import Lucky from '../views/Lucky'
 import EasyBuy from '../views/EasyBuy.vue'
 import Save from '../views/Save.vue'
 import EasyOkBuy from '../views/EasyOkBuy.vue'
-
+import WithdrawManger from '../views/WithdrawManger'
+import Withdraw from '../views/Withdraw'
+import Setting from '../views/Setting'
+import IncomeManger from '../views/IncomeManger'
+import ShopperIncomeManger from '../views/ShopperIncomeManger'
 Vue.use(VueRouter)
 
 const routes = [
@@ -96,13 +100,37 @@ const routes = [
     path: '/EasyOkBuy',
     name: '无人售货购买',
     component: EasyOkBuy
-  }
+  },
+  {
+    path: '/WithdrawManger',
+    name: '提现管理',
+    component: WithdrawManger
+  },
+  {
+    path: '/Withdraw',
+    name: '提现',
+    component: Withdraw
+  }, {
+        path: '/IncomeManger',
+        name: '收入管理',
+        component: IncomeManger
+    }, 
+    {
+        path: '/ShopperIncomeManger',
+        name: '收入分析',
+        component: ShopperIncomeManger
+    },
+    {
+      path: '/Setting',
+      name: '设置',
+      component: Setting
+    }
 ]
 
 const router = new VueRouter({
-  mode: 'history',
-  base: process.env.BASE_URL,
-  routes
+    mode: 'history',
+    base: process.env.BASE_URL,
+    routes
 })
 
 export default router

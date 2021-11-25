@@ -1,9 +1,16 @@
 <template>
   <div>
     <template v-if="subpage === 'manager'">
-      <van-nav-bar title="柜子管理">
+      <van-nav-bar :title="loadingMeta       ? '正在加载' :
+                           stationType === 1 ? '医疗站' :
+                           stationType === 2 ? '盲盒' :
+                           stationType === 3 ? '售货柜' :
+                           stationType === 4 ? '储物柜' : '未知类型'">
         <template #left>
           <van-icon name="arrow-left" size="18" @click="goback" />
+
+          <van-icon v-if="stationType === 2" name="gold-coin-o" size="18" @click="showingPriceDialog = true" />
+          <van-icon v-if="stationType === 3" name="qr" size="18" @click="qrCodeOfStation()" />
         </template>
         <template #right>
           <van-icon name="setting-o" size="18" @click="miniRoute('config')" />
@@ -16,15 +23,18 @@
       <template v-else>
         <van-list>
           <van-cell
-            clickable
+            :clickable="stationType === 4"
             v-for="door of doors"
             :key="parseInt(door.doorId)"
-            @click="qrCode(door.qrCodeUrl)"
+            @click="stationType === 4 ? qrCode(door.qrCodeUrl) : void(0)"
           >
             <div class="lr">
               <div class="infobox">
                 <div class="number">{{ door.doorId }}</div>
-                <div
+                <div v-if="stationType === 4" :class="{img: true, occupied: !!door.goodsId, unoccupied: !door.goodsId}">
+                  {{ !!door.goodsId ? "有" : "无" }}
+                </div>
+                <div v-else
                   class="img"
                   :style="{
                     backgroundImage:
@@ -33,7 +43,10 @@
                         : null,
                   }"
                 ></div>
-                <div class="info">
+                <div v-if="stationType === 4" class="info">
+                  &nbsp;
+                </div>
+                <div v-else class="info">
                   {{
                     door.goodsId === 0
                       ? "空"
@@ -44,16 +57,16 @@
                 </div>
               </div>
               <div class="buttons">
-                <van-button @click.stop="setRateMed(door.doorId)" size="small"
-                  >设置概率</van-button
+                <van-button v-if="stationType === 2" @click.stop="setRateMed(door.doorId)" size="small"
+                  >概率</van-button
                 >
                 <van-button
                   @click.stop="popGoods(door.doorId)"
                   type="danger"
                   size="small"
-                  >取出</van-button
+                  >{{ stationType === 4 ? "打开" : "取出" }}</van-button
                 >
-                <van-button
+                <van-button v-if="stationType !== 4"
                   @click.stop="
                     doorThatEditingGoods = door.doorId;
                     showingPopup = true;
@@ -89,7 +102,10 @@
         </div>
       </van-popup>
       <van-popup v-model="showingQrCode">
-        <div class="qr">
+        <div v-if="qrCodeLoadingMsg !== null" class="qr">
+          {{ qrCodeLoadingMsg }}
+        </div>
+        <div v-else class="qr">
           <img :src="qrCodeUrl" alt="QR Code" />
           <van-button type="info" plain @click="saveQrCode"
             >保存二维码</van-button
@@ -134,10 +150,10 @@
       </van-form>
     </template>
     <van-dialog
-      v-model="show"
+      v-model="showingRateDialog"
       title="设置概率"
       show-cancel-button
-      @confirm="sub"
+      @confirm="submitRate"
     >
       <van-field
         v-model="rate"
@@ -145,6 +161,17 @@
         label="概率"
         placeholder="请输入概率"
       />
+    </van-dialog>
+    <van-dialog
+      v-model="showingPriceDialog"
+      title="设置抽奖价格"
+      show-cancel-button
+      @confirm="submitPrice">
+      <van-field
+        v-model="price"
+        name="价格"
+        label="价格"
+        placeholder="请输入抽奖价格" />
     </van-dialog>
   </div>
 </template>
@@ -159,20 +186,26 @@ import {
   goods_findByShopperId,
   cabinetdoor_get,
   setRate,
+  cabinet_findPrice, cabinet_modifyPrice, cabinet_findInforByCabinetNum, cabinet_getQRcode,
 } from "@/ajax/CabinetManager";
 
 export default {
   name: "SiteManager",
   data() {
     return {
+      stationType: 1,  // move into "meta"
       subpage: "manager",
       showingPopup: false,
       showingQrCode: false,
+      showingRateDialog: false,
+      showingPriceDialog: false,
       rate: "",
+      price: 0,
       loadingMeta: true,
       loadingCabinet: true,
       loadingGoods: true,
 
+      qrCodeLoadingMsg: null,
       qrCodeUrl:
         "data:image/png;base64,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",
       doors: [],
@@ -180,11 +213,14 @@ export default {
       doorThatEditingGoods: 0,
       doorid:"",
       goodsCache: {},
-      show: false,
+      stationQrCodeUrl: null,
       inputText1: "",
       inputText2: "",
       inputText3: "",
       inputQrContent: "",
+      meta: {
+        qrContent: "" /* 当前二维码数据与编辑框的二维码数据分开存储，以避免输入框数据被当作线上数据显示 */,
+      }
     };
   },
   methods: {
@@ -200,8 +236,32 @@ export default {
         return;
       }
 
+      this.qrCodeLoadingMsg = null;
       this.qrCodeUrl = url;
       this.showingQrCode = true;
+    },
+    qrCodeOfStation() {
+      if (this.stationQrCodeUrl !== null) {
+        this.qrCode(this.stationQrCodeUrl);
+        return;
+      }
+
+      let that = this;
+      this.qrCodeLoadingMsg = "正在生成二维码";
+      this.showingQrCode = true;
+      cabinet_getQRcode({
+        text: this.meta.qrContent
+      }).then((json) => {
+        if (!json.ok) {
+          that.showingQrCode = false;
+          Toast(json.errMsg);
+          return;
+        }
+
+        that.stationQrCodeUrl = json.data;
+        that.qrCodeUrl = json.data;
+        that.qrCodeLoadingMsg = null;
+      });
     },
     saveQrCode() {
       let link = document.createElement("a");
@@ -214,6 +274,7 @@ export default {
       this.showingPopup = true;
     },
     clickGoods(doorId, goodsId) {
+      let that = this;
       cabinetdoor_add({
         cabinet_num: this.$route.params.cabinetId,
         cabinetdoor_num: doorId,
@@ -224,29 +285,33 @@ export default {
           return;
         }
 
-        let got = this.doors.filter((e) => e.doorId === doorId);
+        let got = that.doors.filter((e) => e.doorId === doorId);
         if (got.length === 0) {
           Toast("修改已提交，但可能未被保存");
         } else {
           got[0].goodsId = goodsId;
         }
 
-        this.showingPopup = false;
+        that.showingPopup = false;
       });
     },
     submitMeta() {
+      let that = this;
+      let newQr = this.inputQrContent;
       cabinet_addInfo({
         cabinet_num: this.$route.params.cabinetId,
         text1: this.inputText1,
         text2: this.inputText2,
         text3: this.inputText3,
-        qr_code: this.inputQrContent,
+        qr_code: newQr,
       }).then((json) => {
         if (!json.ok) {
           Toast(json.errMsg);
         } else {
+          that.meta.qrContent = newQr;
+          that.stationQrCodeUrl = null;
           Toast.success("修改成功");
-          this.subpage = "manager";
+          that.subpage = "manager";
         }
       });
     },
@@ -269,19 +334,33 @@ export default {
     },
     setRateMed(doorId) {
       this.doorid = doorId
-      this.show = true;
-    
+      this.showingRateDialog = true;
     },
-    sub() {
+    submitRate() {
       if (this.rate > 0 && this.rate < 100) {
         setRate({
           cabinet_num: this.$route.params.cabinetId,
           cabinetdoor_num: this.doorid,
           rate: this.rate,
         }).then((res) => {
-          if (res.code == "0") {
+          if (res.code === "0") {
             Toast.success("设置成功");
           }
+        });
+      }
+    },
+    submitPrice() {
+      if (this.price >= 0) {
+        let targetPrice = this.price;
+
+        cabinet_modifyPrice({
+          cabinet_num: this.$route.params.cabinetId,
+          mhprice: targetPrice * 100
+        }).then((json) => {
+          if (json.code !== "0") {
+            Toast("价格修改失败");
+          }
+          Toast.success("价格已修改为￥" + targetPrice);
         });
       }
     },
@@ -325,6 +404,30 @@ export default {
       });
       that.loadingGoods = false;
     });
+    cabinet_findInforByCabinetNum({
+      cabinet_num: that.$route.params.cabinetId
+    }).then((json) => {
+      if (json.code !== "0") {
+        Toast(json.data);
+        return;
+      }
+
+      that.inputText1 = json.data.text1;
+      that.inputText2 = json.data.text2;
+      that.inputText3 = json.data.text3;
+      that.inputQrContent = json.data.qr_code;
+
+      that.stationType = json.data.type;
+      that.meta.qrContent = json.data.qr_code;
+      that.loadingMeta = false;
+    });
+    cabinet_findPrice({
+      cabinet_num: that.$route.params.cabinetId
+    }).then((json) => {
+      if (json.code === "0") {
+        that.price = json.data / 100;
+      }
+    });
   },
 };
 </script>
@@ -362,16 +465,35 @@ export default {
   background: url("https://img01.yzcdn.cn/vant/custom-empty-image.png");
 }
 
+.infobox > .img.occupied {
+  background: hsl(120, 40%, 40%);
+  background-image: none;
+  line-height: 4rem;
+  text-align: center;
+  color: white;
+}
+
+.infobox > .img.unoccupied {
+  background: hsl(0, 40%, 40%);
+  background-image: none;
+  line-height: 4rem;
+  text-align: center;
+  color: white;
+}
+
 .infobox > .info {
   flex: auto;
 }
 
 .buttons {
-  display: grid;
+  display: flex;
   height: 100%;
-  grid-auto-columns: auto;
-  grid-auto-flow: column;
-  grid-column-gap: 1ch;
+  justify-content: center;
+  align-items: center;
+}
+
+.buttons > *:not(:first-child) {
+  margin-left: 1ch;
 }
 
 .popup {

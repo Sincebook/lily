@@ -26,10 +26,12 @@
             </div>
         </van-form>
     </van-popup>
+<admin-footer/>
 </div>
 </template>
 
 <script>
+import AdminFooter from '../components/AdminFooter'
 import {
     Toast,
     Dialog
@@ -41,6 +43,9 @@ import {
 } from '../ajax/admin_shopperApi'
 export default {
     name: 'ShopManger',
+    components:{
+        AdminFooter
+    },
     data() {
         return {
             show: false,

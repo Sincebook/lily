@@ -23,3 +23,13 @@ export function mhorder_Get(obj) {
 export function orders_Find(obj) {
     return http.get('/api/orders/findByShopperId', obj);
 }
+
+//上传收款码
+export function upload(obj) {
+    return http.post('/api/orders/upload', obj);
+}
+
+//查看收款码
+export function look(obj) {
+    return http.get('/api/orders/look', obj);
+}
