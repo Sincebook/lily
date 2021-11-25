@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="shopDetails">
     <!-- header -->
     <div class="header">
       <van-nav-bar
@@ -145,6 +145,16 @@
             required
             clearable
           />
+          <van-field name="radio" label="类型">
+            <template #input>
+              <div class="menu">
+                <van-dropdown-menu active-color="#1989fa" style="">
+                  <van-dropdown-item v-model="value1" :options="option1" />
+                  <!-- <van-dropdown-item v-model="value2" :options="option2" /> -->
+                </van-dropdown-menu>
+              </div>
+            </template>
+          </van-field>
           <div style="margin: 16px">
             <van-button round block type="info" native-type="submit"
               >添 加</van-button
@@ -224,9 +234,14 @@ export default {
   name: "ShopDetails",
   data() {
     return {
-      // username: "",
-      // password: "",
-      // message: "1234",
+      value1: 1,
+      option1: [
+        { text: "盲盒", value: 1 },
+        { text: "医疗站", value: 2 },
+        { text: "储物柜", value: 3 },
+        { text: "售货柜", value: 4 },
+      ],
+      activeNames: ["1"],
       show: false,
       diashow: false,
       showCabinet: false,
@@ -312,17 +327,6 @@ export default {
       console.log(item);
       this.cabinetName = item.cabinetName;
       this.cabinet_num = item.cabinetNum;
-      // Dialog.confirm({
-      //   title: "修改柜子名称",
-      //   message: `<slot>
-      //   </slot>`,
-      // })
-      // .then(() => {
-      //   // on confirm
-      // })
-      // .catch(() => {
-      //   // on cancel
-      // });
     },
     confirm1() {
       modifyName({
@@ -381,23 +385,17 @@ export default {
     // },
     onSubmit() {
       // console.log("submit", values);
-      console.log(this.cabinet_num, this.cabinetName, this.size);
+      // console.log(this.cabinet_num, this.cabinetName, this.value1, this.size);
       add({
         shopper_id: this.$route.query.shopper_id,
         cabinet_num: this.cabinet_num,
         cabinet_name: this.cabinetName,
+        type: this.value1,
         size: this.size,
       }).then((res) => {
         console.log(res);
         if (res.code == "0") {
-          const cab1 = {
-            id: res.data.id,
-            shopperId: res.data.shopperId,
-            cabinetNum: res.data.cabinetNum,
-            size: res.data.size,
-            online: res.data.status,
-            uptime: res.data.uptime,
-          };
+          const cab1 = res.data;
           this.cabinet.push(cab1);
           Toast("添加成功");
         } else {
@@ -442,8 +440,8 @@ export default {
 };
 </script>
 
-<style scoped>
-.van-cell__value {
+<style>
+.shopDetails .van-cell__value {
   position: relative;
   overflow: hidden;
   color: #969799;
@@ -451,43 +449,58 @@ export default {
   vertical-align: middle;
   word-wrap: break-word;
 }
-.van-dialog {
+.shopDetails .van-dialog {
   text-align: center !important;
 }
-.nowNums {
+.shopDetails .nowNums {
   height: 312px !important;
   overflow-y: scroll !important;
 }
-.footer {
+.shopDetails .footer {
   background: #fff;
   /* position: fixed !important;
   bottom: 20px !important; */
 }
-.van-panel__content {
+.shopDetails .van-panel__content {
   /* height: 413px !important; */
 }
-.van-popup {
+.shopDetails .van-popup {
   text-align: center !important;
 }
-.van-button--round {
+.shopDetails .van-button--round {
   padding: 0px 60px !important;
   margin-top: 10px !important;
 }
-.van-icon {
+.shopDetails .van-icon {
   color: black !important;
 }
-.van-nav-bar__text {
+.shopDetails .van-nav-bar__text {
   color: black !important;
 }
-.van-contact-card::before {
+.shopDetails .van-contact-card::before {
   background: #fafafa !important;
 }
-.goods-card {
+.shopDetails .goods-card {
   margin: 0 !important;
   background-color: white !important;
 }
 
-.delete-button {
+.shopDetails .delete-button {
   height: 100% !important;
+}
+.shopDetails .menu .van-dropdown-menu__bar {
+  height: 24px !important;
+  background-color: #fff;
+  box-shadow: 0 0px 12px #f7f8fa !important;
+}
+.shopDetails .van-dropdown-menu__title {
+  padding: 0px 80px 0px 0px !important;
+}
+.shopDetails .menu .van-cell__value {
+  text-align: right !important;
+  color: rgb(25, 137, 250) !important;
+}
+.shopDetails .menu .van-cell__value .van-icon {
+  color: rgb(25, 137, 250) !important;
 }
 </style>
