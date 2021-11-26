@@ -34,13 +34,12 @@ export default {
     };
   },
   created() {
-     console.log(this.$route.query);
-    // sessionStorage.getItem('cabinet_num')
+    console.log(this.$route.query);
     this.saveFindAll();
   },
   methods: {
     saveFindAll(){
-      save_findByUid({ wxuser_id: this.$route.query.uId,cabinet_num: this.$route.query.cId,}).then((res) => {
+      save_findByUid({ wxuser_id: this.$route.query.uId,cabinet_num: this.$route.query.cId}).then((res) => {
         console.log(res+"***********有数据吗");
         if(res.code==0){
           this.theItems = JSON.parse(JSON.stringify(res.data));
@@ -68,7 +67,7 @@ export default {
     },    
     addStorage(values){
        console.log("addStorage", values);
-        saveAdd({wxuser_id :41, cabinet_num :766186421 }).then((res)=>{
+        saveAdd({wxuser_id: this.$route.query.uId,cabinet_num: this.$route.query.cId}).then((res)=>{
           console.log("要存储了吗");
             if(res.data==="全柜已满"){  
               Toast.fail("柜子已满")
