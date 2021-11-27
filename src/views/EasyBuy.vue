@@ -5,9 +5,10 @@
     <div v-for="goods in allGoods" :key="goods.cabinetdoor_num">
       <div>
          <div class="vantCard">
-            <van-tag :tabindex="goods.cabinetdoor_num" class="index">{{goods.cabinetdoor_num}}.</van-tag>
-            <van-cell center :title="goods.name" :icon="goods.img" :label="'￥' + goods.price / 100" label-class="price">
-              <van-tag color="red" @click="buyGoods(goods.cabinetdoor_num)">立即购买</van-tag>
+            <van-tag v-if="goods.cabinetdoor_num < 10" :tabindex="goods.cabinetdoor_num" class="index">{{ '0' + goods.cabinetdoor_num }}.</van-tag>
+            <van-tag v-else :tabindex="goods.cabinetdoor_num" class="index">{{ goods.cabinetdoor_num }}.</van-tag>
+            <van-cell center :title="goods.name" :icon="goods.img" size="large"  :label="'￥' + goods.price / 100" label-class="price">
+              <van-button type="danger" size="small" color="linear-gradient(to right, #ff6034, #ee0a24)"   @click="buyGoods(goods.cabinetdoor_num)">立即购买</van-button>
             </van-cell>
          </div>
          <div class="divide"></div>
@@ -20,7 +21,7 @@
 import { findInfoByCabinetDoor } from '../ajax/cabinetdoorAPI';
 import { orders_Create } from '../ajax/ordersAPI';
 import { testpay } from "../ajax/test";
-import { final1 } from "../utils/wxpay";
+import { final2 } from "../utils/wxpay";
 import { Dialog, Toast } from 'vant';
 export default {
   name: "EasyBuy",
@@ -57,7 +58,7 @@ export default {
                   console.log(res);
                   let wx_package = res.data.package;
                   const { appId, timeStamp, nonceStr, paySign } = res.data;
-                  final1(
+                  final2(
                     appId,
                     timeStamp,
                     nonceStr,
@@ -83,17 +84,17 @@ export default {
 </script>
 
 <style scoped>
+
 .cardItem{
   display: inline-block;
 }
 .index{
   float: center;
   vertical-align: middle;
-  line-height: 60px;
+  line-height: 80px;
   background-color: rgb(255, 255, 255);
   color: rgb(26, 26, 26);
   font-size: 16px;
-  
 }
 .vantCard{
   padding-left: 4px;
@@ -104,8 +105,7 @@ export default {
 .nowBuy{
   display: inline;
   float: right;
-  color: red
-
+  color: red;
 }
 .price{
   color: red;
@@ -113,13 +113,13 @@ export default {
 }
 
 .van-cell__left-icon {
-    height: 40px;
-    font-size: 40px;
-    line-height: 40px;
+    height: 55px;
+    font-size: 55px;
+    line-height: 55px;
 }
 .van-cell{
   padding: 0px;
-  padding-right:16px ;
+  padding-right:14px ;
 }
 .divide{
   border-bottom: 2px solid #f6f7f8;

@@ -1,13 +1,13 @@
 <template>
   <div>
-    <van-nav-bar title="储物柜" right-plus fixed placeholder></van-nav-bar>
+    <van-nav-bar :title="'储物柜-编号'+cId" right-plus fixed placeholder></van-nav-bar>
     <van-empty v-if="!this.theItems" image="search" description="当前还未存储物品" />
     <div v-for="item in theItems" :key="item.cabinetdoorNum">
       <div>
          <div class="vantCard">
             <van-tag tabindex="" class="index">{{item.cabinetdoorNum}}.</van-tag>
-            <van-cell center title="我的宝贝" icon="send-gift-o" icon-class="image" >
-              <van-tag color="#85da47" size="large"  @click="drawOutThing(item.cabinetdoorNum)">取出</van-tag>
+            <van-cell center title="我的物品" icon="send-gift-o" icon-class="image" >
+              <van-tag color="#1296db" size="large"  @click="drawOutThing(item.cabinetdoorNum)">立即取出</van-tag>
             </van-cell>
          </div>
          <div class="divide"></div>
@@ -31,9 +31,11 @@ export default {
   data() {
     return {
       theItems:"",
+      cId:""
     };
   },
   created() {
+    this.cId = this.$route.query.cId;
      console.log(this.$route.query);
     // sessionStorage.getItem('cabinet_num')
     this.saveFindAll();
@@ -41,9 +43,13 @@ export default {
   methods: {
     saveFindAll(){
       save_findByUid({ wxuser_id: this.$route.query.uId,cabinet_num: this.$route.query.cId,}).then((res) => {
-        console.log(res+"***********有数据吗");
+        console.log(res);
         if(res.code==0){
-          this.theItems = JSON.parse(JSON.stringify(res.data));
+          if (res.data == '没有存储物品') {
+            this.theItems = false;
+          } else {
+            this.theItems = res.data
+          }
           console.log(this.theItems)
         }
       });
@@ -68,17 +74,19 @@ export default {
     },    
     addStorage(values){
        console.log("addStorage", values);
-        saveAdd({wxuser_id :41, cabinet_num :766186421 }).then((res)=>{
-          console.log("要存储了吗");
+        saveAdd({wxuser_id: this.$route.query.uId, cabinet_num: this.$route.query.cId }).then((res)=>{
             if(res.data==="全柜已满"){  
               Toast.fail("柜子已满")
             }else{
-               Dialog.alert({
-                  title: "开柜成功",
+              console.log(res);
+              if (res.code === '0') {
+                Dialog.alert({
+                  title: res.data + "号柜门已打开",
+                  message:"放好物品后，请关闭柜门",
                   theme: "round-button",
                   confirmButtonText: "确认",
-                }).then(() => {});
-              this.saveFindAll();
+                }).then(() => {this.saveFindAll();});
+              }
             }
         })
     },

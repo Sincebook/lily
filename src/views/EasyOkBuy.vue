@@ -28,6 +28,8 @@
 </template>
 
 <script>
+import { Toast, Dialog } from "vant";
+import { mhorder_Get } from "../ajax/ordersAPI";
 export default {
   name: "EsayOkBuy",
   data() {
@@ -40,9 +42,29 @@ export default {
     console.log(this.$route.query);
   },
   methods: {
-    openDoor(values) {
-      console.log("openDoor", values);
-      
+    openDoor() {
+      if (this.$route.query.serial_num && this.open) {
+        mhorder_Get({
+          serial_num: this.$route.query.serial_num,
+        }).then((res) => {
+          if (res.code === "0") {
+                console.log(res.data);
+                Dialog.alert({
+                  title: "柜门已打开",
+                  message: "请取走货物后，关闭柜门，谢谢！",
+                  theme: "round-button",
+                  confirmButtonText: "确定",
+                }).then(() => {
+                  window.location.href =
+                    "http://kaoyan.since88.cn/wechat/authorize?returnUrl=lily&cId=766186421&dId=-1";
+                });
+            } else {
+              Toast.fail(res.data);
+            }
+        })
+      } else {
+        Toast.fail('没有订单');
+      }
     },
   },
 };
