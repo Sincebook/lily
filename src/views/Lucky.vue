@@ -5,7 +5,7 @@
       center
       title="Since文创智慧盲盒"
       title-class="name"
-      :value="'￥'+mhprice"
+      :value="'￥' + mhprice"
       value-class="price"
       label="购买后，柜门将随机打开"
     />
@@ -26,16 +26,23 @@
         </van-swipe-item>
       </van-swipe>
     </van-notice-bar>
-     
+
     <van-divider>商品详情</van-divider>
     <div style="padding: 0 1em 1em; color: #333; font-size: 14px">
       本品为幸运盲盒，由正版青壹坊惊喜盒组成。下单后将随机打开柜子，幸运者将有概率一键全开！同时提醒，有一定概率空奖。
     </div>
-   <van-cell title="当前全开概率" value-class="pro" :value="pro+'‰'" />
+    <van-cell
+      title="当前全开概率"
+      value-class="pro"
+      :value="pro + '‰'"
+    />
     <img src="../assets/2.jpg" style="width: 100%" />
     <img src="../assets/3.jpg" style="width: 100%" />
-    <since-footer/>
-    <br/><br/><br/>
+    <van-cell title="查看排行榜" is-link to="/Rank">
+      <van-tag type="danger">new</van-tag>
+    </van-cell>
+    <since-footer />
+    <br /><br /><br />
     <van-button
       type="danger"
       block
@@ -62,8 +69,8 @@ Vue.use(Divider);
 export default {
   name: "Item",
   props: ["goodId"],
-  components:{
-    SinceFooter
+  components: {
+    SinceFooter,
   },
   data() {
     return {
@@ -73,16 +80,16 @@ export default {
       showQrCode: false,
       items: [...Array(20).keys()],
       reports: [],
-      lucky:'',
-      nickname:'',
-      mhprice:0,
-      pro:1
+      lucky: "",
+      nickname: "",
+      mhprice: 0,
+      pro: 1,
     };
   },
   //生命周期钩子函数，就是一个vue实例被生成后调用这个函数
   created() {
     console.log(this.$route.query);
-    findPrice({"cabinet_num": this.$route.query.cId}).then(res => {
+    findPrice({ cabinet_num: this.$route.query.cId }).then((res) => {
       if (res.code === "0") {
         console.log(res);
         this.mhprice = res.data / 100;
@@ -95,11 +102,11 @@ export default {
     });
     findReport({ wxuser_id: this.$route.query.uId }).then((res) => {
       for (let key in res.data) {
-        this.pro = key
+        this.pro = key;
       }
     });
     Dialog.alert({
-      title: Math.ceil(Math.random()*100),
+      title: Math.ceil(Math.random() * 100),
       message: "当前幸运值",
       theme: "round-button",
       confirmButtonText: "开始抽奖",

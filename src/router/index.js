@@ -22,6 +22,7 @@ import Withdraw from '../views/Withdraw'
 import Setting from '../views/Setting'
 import IncomeManger from '../views/IncomeManger'
 import ShopperIncomeManger from '../views/ShopperIncomeManger'
+import Rank from '../views/Rank'
 Vue.use(VueRouter)
 
 const routes = [
@@ -124,6 +125,11 @@ const routes = [
       path: '/Setting',
       name: '设置',
       component: Setting
+    },
+    {
+      path: '/Rank',
+      name: '排行榜',
+      component: Rank
     }
 ]
 
