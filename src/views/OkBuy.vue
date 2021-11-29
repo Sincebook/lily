@@ -51,10 +51,10 @@ export default {
           const toast = Toast.loading({
             duration: 0, // 持续展示 toast
             forbidClick: true,
-            message: "开奖倒计时 3 秒",
+            message: "开奖倒计时 1 秒",
           });
 
-          let second = 3;
+          let second = 1;
           const timer = setInterval(() => {
             second--;
             if (second) {
