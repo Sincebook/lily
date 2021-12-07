@@ -13,3 +13,6 @@ export function findRich(params) {
 export function findLucky(params) {
   return http.get('api/report/findLucky', params);
 }
+export function findUnlucky(params) {
+  return http.get('api/report/findUnlucky', params);
+}
