@@ -48,8 +48,7 @@
       block
       @click="createOrder"
       style="bottom: 0; position: fixed"
-      >立即购买</van-button
-    >
+      >立即购买</van-button>
   </div>
 </template>
 <script>

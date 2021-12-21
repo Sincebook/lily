@@ -23,10 +23,16 @@ import Setting from '../views/Setting'
 import IncomeManger from '../views/IncomeManger'
 import ShopperIncomeManger from '../views/ShopperIncomeManger'
 import Rank from '../views/Rank'
+import LuckyBox from '../views/LuckyBox'
+import Fashion from '../views/Fashion'
+import others from '../views/Fashions/others'
+import popmart from '../views/Fashions/popmart'
+import rolife from '../views/Fashions/rolife'
+import treeart from '../views/Fashions/treeart'
 Vue.use(VueRouter)
 
 const routes = [
- 
+
   {
     path: '/',
     name: 'Home',
@@ -36,43 +42,43 @@ const routes = [
     path: '/AdminLogin',
     name: '管理员登录',
     component: AdminLogin
-  },{
+  }, {
     path: '/ShopManger',
     name: '商户管理',
     component: ShopManger
-  },{
+  }, {
     path: '/ShopDetails',
     name: '商户详情',
     component: ShopDetails
-  },{
+  }, {
     path: '/ShopLogin',
     name: '商户登录',
     component: ShopLogin
-  },{
+  }, {
     path: '/StationManger',
     name: '站点管理',
     component: StationManger
-  },{
+  }, {
     path: '/CabinetManger/:cabinetId',
     name: '柜子管理',
     component: CabinetManger
-  },{
+  }, {
     path: '/ItemManger',
     name: '商品管理',
     component: ItemManger
-  },{
+  }, {
     path: '/ListManger',
     name: '订单管理',
     component: ListManger
-  },{
+  }, {
     path: '/Item',
     name: '商品',
     component: Item
-  },{
+  }, {
     path: '/Buy',
     name: '购买',
     component: Buy
-  },{
+  }, {
     path: '/AddItem',
     name: '添加商品',
     component: AddItem
@@ -112,31 +118,61 @@ const routes = [
     name: '提现',
     component: Withdraw
   }, {
-        path: '/IncomeManger',
-        name: '收入管理',
-        component: IncomeManger
-    }, 
-    {
-        path: '/ShopperIncomeManger',
-        name: '收入分析',
-        component: ShopperIncomeManger
-    },
-    {
-      path: '/Setting',
-      name: '设置',
-      component: Setting
-    },
-    {
-      path: '/Rank',
-      name: '排行榜',
-      component: Rank
-    }
+    path: '/IncomeManger',
+    name: '收入管理',
+    component: IncomeManger
+  },
+  {
+    path: '/ShopperIncomeManger',
+    name: '收入分析',
+    component: ShopperIncomeManger
+  },
+  {
+    path: '/Setting',
+    name: '设置',
+    component: Setting
+  },
+  {
+    path: '/Rank',
+    name: '排行榜',
+    component: Rank
+  },
+  {
+    path: '/LuckyBox',
+    name: '潮玩盲盒',
+    component: LuckyBox
+  },
+  {
+    path: '/Fashion',
+    name: '潮玩',
+    component: Fashion
+  },
+  {
+    path: '/Fashions/others',
+    name: '其他',
+    component: others
+  },
+  {
+    path: '/Fashions/popmart',
+    name: 'popmart',
+    component: popmart
+  },
+  {
+    path: '/Fashions/treeart',
+    name: '青壹坊',
+    component: treeart
+  },
+  {
+    path: '/Fashions/rolife',
+    name: '若来',
+    component: rolife
+  }
 ]
 
 const router = new VueRouter({
-    mode: 'history',
-    base: process.env.BASE_URL,
-    routes
+  mode: 'history',
+  base: process.env.BASE_URL,
+  routes
 })
 
 export default router
