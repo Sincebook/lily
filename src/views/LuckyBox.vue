@@ -22,7 +22,7 @@
     <img src="../assets/1.png" style="width: 100%;float:left;" />
     <img src="../assets/2.png" style="width: 50%" />
     <img src="../assets/3.png" style="width: 50%" />
-    <van-cell title="查看全系列盲盒池" is-link to="/Rank">
+    <van-cell title="查看全系列盲盒池" is-link to="/Fashion">
       <van-tag type="danger">new</van-tag>
     </van-cell>
     <van-divider>温馨提示</van-divider>
