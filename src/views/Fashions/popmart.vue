@@ -1,13 +1,24 @@
 <template>
-  <div>popmart</div>
+  <div>
+    <van-nav-bar
+      title="泡泡玛特"
+      left-text="返回"
+      left-arrow
+      @click-left="onClickLeft"
+    />
+  </div>
 </template>
 
 <script>
 export default {
-    name:'popmart'
-}
+  name: "popmart",
+  methods: {
+    onClickLeft() {
+      this.$router.go(-1);
+    }
+  },
+};
 </script>
 
 <style>
-
 </style>

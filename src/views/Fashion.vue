@@ -18,8 +18,8 @@
       <van-cell title="青壹坊" label="梦红楼、西游、遇见大唐" is-link to="/Fashions/treeart">
         <van-tag type="success" >TreeInArt</van-tag>
       </van-cell>
-      <van-cell title="精品手办" label="梦红楼、西游、遇见大唐" is-link to="/Fashions/others">
-        <van-tag type="primary" >Tree</van-tag>
+      <van-cell title="精品手办" label="千元级欧皇系列" is-link to="/Fashions/others">
+        <van-tag type="primary" >Others</van-tag>
       </van-cell>
     </van-cell-group>
   </div>
@@ -29,8 +29,12 @@
 export default {
   name: "Fashion",
   methods: {
-    onClickLeft() {},
-    onClickRight() {},
+    onClickLeft() {
+        this.$router.go(-1);
+    },
+    onClickRight() {
+        this.$router.push('/Fashions/mine')
+    },
   },
 };
 </script>

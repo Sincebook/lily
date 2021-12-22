@@ -440,7 +440,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .shopDetails .van-cell__value {
   position: relative;
   overflow: hidden;

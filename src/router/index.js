@@ -29,6 +29,9 @@ import others from '../views/Fashions/others'
 import popmart from '../views/Fashions/popmart'
 import rolife from '../views/Fashions/rolife'
 import treeart from '../views/Fashions/treeart'
+import mine from '../views/Fashions/mine'
+import address from '../views/Fashions/address'
+import result from '../views/Fashions/result'
 Vue.use(VueRouter)
 
 const routes = [
@@ -166,6 +169,21 @@ const routes = [
     path: '/Fashions/rolife',
     name: '若来',
     component: rolife
+  },
+  {
+    path: '/Fashions/mine',
+    name: '我的物品',
+    component: mine
+  },
+  {
+    path: '/Fashions/address',
+    name: '我的地址',
+    component: address
+  },
+  {
+    path: '/Fashions/result',
+    name: '开奖',
+    component: result
   }
 ]
 
