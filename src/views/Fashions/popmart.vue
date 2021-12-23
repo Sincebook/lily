@@ -6,6 +6,10 @@
       left-arrow
       @click-left="onClickLeft"
     />
+    <img src="../../assets/popmart/1.png" style="width:100%">
+    <van-cell title="密森古堡系列" value="市场零售价69元" value-class="price"/>
+    <img src="../../assets/popmart/2.png" style="width:100%">
+    <van-cell title="密森古堡系列" value="市场零售价69元" value-class="price"/>
   </div>
 </template>
 
@@ -20,5 +24,8 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
+  .price {
+    color:rgb(218, 27, 27);
+  }
 </style>
