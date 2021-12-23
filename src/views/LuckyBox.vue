@@ -2,7 +2,7 @@
   <div>
     <van-swipe :autoplay="4500">
       <van-swipe-item v-for="(image, index) in images" :key="index">
-        <img :src="image" style="width:100%"/>
+        <img :src="image" style="width: 100%" />
       </van-swipe-item>
     </van-swipe>
     <van-cell
@@ -13,13 +13,14 @@
       value-class="price"
       label="全系列正版、一件包邮"
     />
-     <van-divider>商品详情</van-divider>
+    <van-divider>商品详情</van-divider>
     <div style="padding: 0 1.5em 1.5em; color: #555; font-size: 14px">
-      本品为潮玩盲盒，由正版Pop Mart系列摆件、若来Rolife系列摆件、青壹坊系列摆件、游戏或动漫手办、景品等组成，原价59元一发、限时五折28.8元。
+      本品为潮玩盲盒，由正版Pop
+      Mart系列摆件、若来Rolife系列摆件、青壹坊系列摆件、游戏或动漫手办、景品等组成，购买后将从以上内容中随机抽取一个。原价59元一发、限时五折28.8元。
     </div>
-    <img src="../assets/2.jpg" style="width: 50%;float:left;" />
-    <img src="../assets/3.jpg" style="width: 50%;float:left;" />
-    <img src="../assets/1.png" style="width: 100%;float:left;" />
+    <img src="../assets/2.jpg" style="width: 50%; float: left" />
+    <img src="../assets/3.jpg" style="width: 50%; float: left" />
+    <img src="../assets/1.png" style="width: 100%; float: left" />
     <img src="../assets/2.png" style="width: 50%" />
     <img src="../assets/3.png" style="width: 50%" />
     <van-cell title="查看全系列盲盒池" is-link to="/Fashion">
@@ -27,8 +28,8 @@
     </van-cell>
     <van-divider>温馨提示</van-divider>
     <div style="padding: 0 1.5em 1.5em; color: #555; font-size: 14px">
-        1、盲盒为特殊产品，售出后无特殊原因，不退不换。<br/>
-        2、有问题请关注公众号【森思公司】联系7*24客服。<br/>
+      1、盲盒为特殊产品，售出后无特殊原因，不退不换。<br />
+      2、有问题请关注公众号【森思公司】联系7*24客服。<br />
     </div>
     <br /><br /><br />
     <van-button
@@ -36,21 +37,69 @@
       block
       @click="createOrder"
       style="bottom: 0; position: fixed"
-      >立即购买</van-button>
+      >立即购买</van-button
+    >
   </div>
 </template>
 
 <script>
+import { Dialog, Toast } from "vant";
+import { createOnline } from "../ajax/luckyboxApi";
+import { final3 } from "../utils/wxpay";
+import { testpay } from "../ajax/test";
 export default {
   name: "LuckyBox",
   data() {
     return {
       images: [
-        'https://sincelibrary.oss-cn-shanghai.aliyuncs.com/test/reports/20211221/c70ae1f034954c318027e9a7c2a4e219.jpg',
-        'https://sincelibrary.oss-cn-shanghai.aliyuncs.com/test/reports/20211221/d0511d5d8225449f9e31d5c4db89e719.jpg',
-        'https://sincelibrary.oss-cn-shanghai.aliyuncs.com/test/reports/20211221/a46985fa51f74716a40cd87947839286.jpg'
+        "https://sincelibrary.oss-cn-shanghai.aliyuncs.com/test/reports/20211221/c70ae1f034954c318027e9a7c2a4e219.jpg",
+        "https://sincelibrary.oss-cn-shanghai.aliyuncs.com/test/reports/20211221/d0511d5d8225449f9e31d5c4db89e719.jpg",
+        "https://sincelibrary.oss-cn-shanghai.aliyuncs.com/test/reports/20211221/a46985fa51f74716a40cd87947839286.jpg",
       ],
     };
+  },
+  created() {
+    Dialog.alert({
+      title: "活动提醒",
+      message: "Since潮玩盲盒上线，限时五折！！！",
+      theme: "round-button",
+      confirmButtonText: "确定",
+    }).then(() => {});
+  },
+  methods: {
+    createOrder() {
+      const wxuser_id = this.$route.query.uId
+      if (wxuser_id) {
+        createOnline({
+          wxuser_id: this.$route.query.uId,
+        }).then((res) => {
+          if (res.code === "0") {
+            let serial_num = res.data.serialNum;
+            testpay({ serial_num }).then((res) => {
+              console.log(res);
+              let wx_package = res.data.package;
+              const { appId, timeStamp, nonceStr, paySign } = res.data;
+              final3(
+                appId,
+                timeStamp,
+                nonceStr,
+                wx_package,
+                paySign,
+                serial_num,
+                wxuser_id
+              );
+            });
+          } else {
+            Dialog.alert({
+              title: res.errMsg,
+              message: "购买失败，请联系客服",
+            }).then(() => {});
+          }
+        });
+      } else {
+        Toast.fail("用户未授权");
+      }
+    },
   },
 };
 </script>

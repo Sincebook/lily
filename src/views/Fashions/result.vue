@@ -36,11 +36,12 @@
           background: white;
         "
       >
-        <van-nav-bar title="No.00001"></van-nav-bar>
-        <img style="width: 80%" src="../../assets/1.jpg" alt="" />
+        <van-nav-bar
+          :title="'No.' + result.record_id.toString().padStart(8, '0')"
+        ></van-nav-bar>
+        <img style="width: 80%" :src="result.img" alt="" />
         <div style="margin: 10px">
-          <span> 田园牧歌-农场主 </span>
-          <span> </span>
+          <span> {{ mhtype[parseInt(result.type)] }}-{{ result.name }} </span>
           <br />
         </div>
         <van-button type="danger" style="width: 100%" @click="address"
@@ -77,14 +78,13 @@
       position="bottom"
       :style="{ height: '50%' }"
     >
+      <van-nav-bar title="添加收货地址"></van-nav-bar>
       <van-address-edit
         :area-list="areaList"
         show-search-result
         :search-result="searchResult"
         :area-columns-placeholder="['请选择', '请选择', '请选择']"
         @save="onSave"
-        @delete="onDelete"
-        @change-detail="onChangeDetail"
       />
     </van-popup>
   </div>
@@ -92,8 +92,14 @@
 
 <script>
 // import { Toast, Dialog } from "vant";
-import { areaList } from '@vant/area-data';
-
+import { areaList } from "@vant/area-data";
+import {
+  getOnline,
+  getInfo,
+  addInfo,
+  finishInfo,
+} from "../../ajax/luckyboxApi";
+import { Toast, Dialog } from "vant";
 export default {
   name: "result",
   data() {
@@ -103,25 +109,17 @@ export default {
       show: false,
       door: false,
       addDoor: false,
-      chosenAddressId: "1",
+      chosenAddressId: "",
       areaList,
       searchResult: [],
-      list: [
-        {
-          id: "1",
-          name: "张三",
-          tel: "13000000000",
-          address: "浙江省杭州市西湖区文三路 138 号东方通信大厦 7 楼 501 室",
-          isDefault: true,
-        },
-        {
-          id: "2",
-          name: "李四",
-          tel: "1310000000",
-          address: "浙江省杭州市拱墅区莫干山路 50 号",
-        },
-      ],
-      
+      result: {
+        record_id: "",
+        name: "",
+        img: "",
+        type: "",
+      },
+      mhtype: ["Pop Mart", "若来Rolife", "青壹坊", "欧皇手办"],
+      list: [],
     };
   },
   created() {
@@ -129,13 +127,102 @@ export default {
   },
   methods: {
     openDoor() {
-      this.show = true;
+      const { wxuser_id, serial_num } = this.$route.query;
+      if (wxuser_id && serial_num && this.open) {
+        Toast.loading({
+          duration: 0, // 持续展示 toast
+          forbidClick: true,
+          message: "抽取中",
+        });
+        this.open = false;
+        getOnline({ serial_num }).then((res) => {
+          Toast.clear();
+          if (res.code === "0") {
+            console.log(res, wxuser_id);
+            this.result = res.data;
+            this.show = true;
+          } else {
+            Toast.fail(res.errMsg);
+          }
+        });
+      } else {
+        Toast.fail("订单无效");
+      }
     },
     address() {
-      this.door = true;
+      const { wxuser_id } = this.$route.query;
+      getInfo({ wxuser_id }).then((res) => {
+        if (res.code === "0") {
+          for (let i = 0; i < res.data.length; i++) {
+            const { id, name, phone, address } = res.data[i];
+            this.list[i] = { id, name, tel: phone, address };
+          }
+          this.door = true;
+        } else {
+          this.addDoor = true;
+        }
+      });
     },
-    onAdd() {},
+    onAdd() {
+      const { serial_num } = this.$route.query;
+      console.log(this.chosenAddressId);
+      if (this.chosenAddressId) {
+        let address = {};
+        for (let item in this.list) {
+          if (item.id == this.chosenAddressId) {
+            address = item;
+          }
+        }
+        console.log(address);
+        finishInfo({ serial_num, info_id: this.chosenAddressId }).then(
+          (res) => {
+            if (res.code === "0") {
+              Dialog.alert({
+                title: "抽取完成",
+                message: "将在48小时内完成发货，耐心等待哦~",
+                theme: "round-button",
+                confirmButtonText: "再来一发",
+              }).then(() => {
+                window.location.href =
+                    "http://kaoyan.since88.cn/wechat/authorize?returnUrl=lily&cId=0&dId=0";
+              });
+            } else {
+              Toast.fail("数据有误");
+            }
+          }
+        );
+      } else {
+        Toast.fail("请选择地址");
+      }
+    },
+    onSave(values) {
+      console.log(values);
+      const { wxuser_id } = this.$route.query;
+      const { name, city, county, addressDetail, tel, province } = values;
+      addInfo({
+        wxuser_id,
+        name,
+        phone: tel,
+        address: province + city + county + addressDetail,
+      }).then((res) => {
+        if (res.code === "0") {
+          getInfo({ wxuser_id }).then((res) => {
+            if (res.code === "0") {
+              for (let i = 0; i < res.data.length; i++) {
+                const { id, name, phone, address } = res.data[i];
+                this.list[i] = { id, name, tel: phone, address };
+              }
+            }
+          });
+          this.addDoor = false;
+          this.door = true;
+        } else {
+          Toast.fail("保存失败");
+        }
+      });
+    },
     addAddress() {
+      this.door = false;
       this.addDoor = true;
     },
   },
