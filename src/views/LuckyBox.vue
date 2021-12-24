@@ -65,6 +65,7 @@ export default {
       theme: "round-button",
       confirmButtonText: "确定",
     }).then(() => {});
+    localStorage.setItem('wxuser_id', this.$route.query.uId);
   },
   methods: {
     createOrder() {
