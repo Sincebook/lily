@@ -32,14 +32,14 @@
         style="
           text-align: center;
           width: 300px;
-          margin: 200px auto;
+          margin: 150px auto;
           background: white;
         "
       >
         <van-nav-bar
           :title="'No.' + result.record_id.toString().padStart(8, '0')"
         ></van-nav-bar>
-        <img style="width: 80%" :src="result.img" alt="" />
+        <img style="width: 100%" :src="result.img" alt="" />
         <div style="margin: 10px">
           <span> {{ mhtype[parseInt(result.type)] }}-{{ result.name }} </span>
           <br />
