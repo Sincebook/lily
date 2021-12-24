@@ -22,7 +22,13 @@
       >
         <van-swipe-item v-for="report in reports" :key="report.id">
           <img :src="report.headImg" class="headImg" />
-          {{ report.wxuserName.substring(0,1) + '****' }} 荣获 {{mhtype[parseInt(report.poolType)] +'系列【' + report.poolName +"】"}}
+          {{ report.wxuserName.substring(0, 1) + "****" }} 荣获
+          {{
+            mhtype[parseInt(report.poolType)] +
+            "系列【" +
+            report.poolName +
+            "】"
+          }}
         </van-swipe-item>
       </van-swipe>
     </van-notice-bar>
@@ -57,7 +63,7 @@
 
 <script>
 import { Dialog, Toast } from "vant";
-import { createOnline,findAll } from "../ajax/luckyboxApi";
+import { createOnline, findAll } from "../ajax/luckyboxApi";
 import { final3 } from "../utils/wxpay";
 import { testpay } from "../ajax/test";
 export default {
@@ -69,7 +75,7 @@ export default {
         "https://sincelibrary.oss-cn-shanghai.aliyuncs.com/test/reports/20211221/d0511d5d8225449f9e31d5c4db89e719.jpg",
         "https://sincelibrary.oss-cn-shanghai.aliyuncs.com/test/reports/20211221/a46985fa51f74716a40cd87947839286.jpg",
       ],
-      reports:[],
+      reports: [],
       mhtype: ["Pop Mart", "若来Rolife", "青壹坊", "欧皇手办"],
     };
   },
@@ -80,16 +86,19 @@ export default {
       theme: "round-button",
       confirmButtonText: "确定",
     }).then(() => {});
-    localStorage.setItem('wxuser_id', this.$route.query.uId);
-    findAll().then(res => {
+    localStorage.setItem("wxuser_id", this.$route.query.uId);
+    findAll().then((res) => {
       console.log(res);
       this.reports = res.data;
-    })
-
+    });
   },
   methods: {
     createOrder() {
-      const wxuser_id = this.$route.query.uId
+      Toast.loading({
+        message: "加载中...",
+        forbidClick: true,
+      });
+      const wxuser_id = this.$route.query.uId;
       if (wxuser_id) {
         createOnline({
           wxuser_id: this.$route.query.uId,
@@ -100,6 +109,7 @@ export default {
               console.log(res);
               let wx_package = res.data.package;
               const { appId, timeStamp, nonceStr, paySign } = res.data;
+              Toast.clear();
               final3(
                 appId,
                 timeStamp,
