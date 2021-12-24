@@ -21,6 +21,8 @@
       <van-cell title="精品手办" label="千元级欧皇系列" is-link to="/Fashions/others">
         <van-tag type="primary" >Others</van-tag>
       </van-cell>
+      <van-cell title="更多系列正在筹备中，敬请期待~">
+      </van-cell>
     </van-cell-group>
   </div>
 </template>

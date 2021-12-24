@@ -7,7 +7,7 @@
       @click-left="onClickLeft"
     />
     <img src="../../assets/popmart/1.png" style="width:100%">
-    <van-cell title="密森古堡系列" value="市场零售价69元" value-class="price"/>
+    <van-cell title="熊猫热潮系列" value="市场零售价69元" value-class="price"/>
     <img src="../../assets/popmart/2.png" style="width:100%">
     <van-cell title="密森古堡系列" value="市场零售价69元" value-class="price"/>
   </div>
