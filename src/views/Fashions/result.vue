@@ -69,6 +69,7 @@
         add-button-text="确认发货"
         :list="list"
         @add="onAdd"
+        @edit="onEdit"
       />
     </van-popup>
     <van-popup
@@ -98,6 +99,7 @@ import {
   getInfo,
   addInfo,
   finishInfo,
+  delInfo,
 } from "../../ajax/luckyboxApi";
 import { Toast, Dialog } from "vant";
 export default {
@@ -157,6 +159,9 @@ export default {
             const { id, name, phone, address } = res.data[i];
             this.list[i] = { id, name, tel: phone, address };
           }
+          if (this.list.length != 0) {
+            this.chosenAddressId = this.list[0].id;
+          }
           this.door = true;
         } else {
           this.addDoor = true;
@@ -184,7 +189,7 @@ export default {
                 confirmButtonText: "再来一发",
               }).then(() => {
                 window.location.href =
-                    "http://kaoyan.since88.cn/wechat/authorize?returnUrl=lily&cId=0&dId=0";
+                  "http://kaoyan.since88.cn/wechat/authorize?returnUrl=lily&cId=0&dId=0";
               });
             } else {
               Toast.fail("数据有误");
@@ -194,6 +199,38 @@ export default {
       } else {
         Toast.fail("请选择地址");
       }
+    },
+    onEdit(values) {
+      const { wxuser_id } = this.$route.query;
+      console.log(values);
+      Dialog.confirm({
+        title: "温馨提示",
+        message: "你确认要删除该地址吗？",
+      })
+        .then(() => {
+          delInfo({
+            wxuser_id,
+            info_id: values.id,
+          }).then((res) => {
+            if (res.code === "0") {
+              getInfo({ wxuser_id }).then((res) => {
+                if (res.code === "0") {
+                  for (let i = 0; i < res.data.length; i++) {
+                    const { id, name, phone, address } = res.data[i];
+                    this.list[i] = { id, name, tel: phone, address };
+                  }
+                  if (this.list.length != 0) {
+                    this.chosenAddressId = this.list[0].id;
+                  } else {
+                    this.chosenAddressId = '';
+                  }
+                }
+              });
+              Toast.success("删除成功");
+            }
+          });
+        })
+        .catch(() => {});
     },
     onSave(values) {
       console.log(values);
@@ -211,6 +248,9 @@ export default {
               for (let i = 0; i < res.data.length; i++) {
                 const { id, name, phone, address } = res.data[i];
                 this.list[i] = { id, name, tel: phone, address };
+              }
+              if (this.list.length != 0) {
+                this.chosenAddressId = this.list[0].id;
               }
             }
           });

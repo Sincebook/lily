@@ -12,7 +12,7 @@ export function getInfo(obj) {
 
 // 用户查询自己的收货信息
 export function delInfo(obj) {
-    return http.get('/api/info/delete', obj);
+    return http.post('/api/info/delete', obj);
 }
 
 // 完善收货信息
