@@ -31,8 +31,8 @@
         class="rotate-scale-up-diag-1"
         style="
           text-align: center;
-          width: 300px;
-          margin: 150px auto;
+          width: 50%;
+          margin: 20% auto;
           background: white;
         "
       >

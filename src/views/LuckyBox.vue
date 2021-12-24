@@ -13,6 +13,19 @@
       value-class="price"
       label="全系列正版、一件包邮"
     />
+    <van-notice-bar left-icon="volume-o" :scrollable="false">
+      <van-swipe
+        vertical
+        class="notice-swipe"
+        :autoplay="3000"
+        :show-indicators="false"
+      >
+        <van-swipe-item v-for="report in reports" :key="report.id">
+          <img :src="report.headImg" class="headImg" />
+          {{ report.wxuserName.substring(0,1) + '****' }} 荣获 {{mhtype[parseInt(report.poolType)] +'系列【' + report.poolName +"】"}}
+        </van-swipe-item>
+      </van-swipe>
+    </van-notice-bar>
     <van-divider>商品详情</van-divider>
     <div style="padding: 0 1.5em 1.5em; color: #555; font-size: 14px">
       本品为潮玩盲盒，由正版Pop
@@ -44,7 +57,7 @@
 
 <script>
 import { Dialog, Toast } from "vant";
-import { createOnline } from "../ajax/luckyboxApi";
+import { createOnline,findAll } from "../ajax/luckyboxApi";
 import { final3 } from "../utils/wxpay";
 import { testpay } from "../ajax/test";
 export default {
@@ -56,6 +69,8 @@ export default {
         "https://sincelibrary.oss-cn-shanghai.aliyuncs.com/test/reports/20211221/d0511d5d8225449f9e31d5c4db89e719.jpg",
         "https://sincelibrary.oss-cn-shanghai.aliyuncs.com/test/reports/20211221/a46985fa51f74716a40cd87947839286.jpg",
       ],
+      reports:[],
+      mhtype: ["Pop Mart", "若来Rolife", "青壹坊", "欧皇手办"],
     };
   },
   created() {
@@ -66,6 +81,11 @@ export default {
       confirmButtonText: "确定",
     }).then(() => {});
     localStorage.setItem('wxuser_id', this.$route.query.uId);
+    findAll().then(res => {
+      console.log(res);
+      this.reports = res.data;
+    })
+
   },
   methods: {
     createOrder() {

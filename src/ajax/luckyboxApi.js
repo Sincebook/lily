@@ -44,3 +44,6 @@ export function createOnline(obj) {
 export function getOnline(obj) {
     return http.post('/api/orders/onlineget', obj);
 }
+export function findAll(obj) {
+    return http.get('/api/record/findAll', obj);
+}
