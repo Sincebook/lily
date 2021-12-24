@@ -21,7 +21,7 @@
       style="
         background: rgba(0, 0, 0, 0.6);
         position: fixed;
-        height: 100%;
+        height: 150%;
         width: 100%;
         top: 0;
         z-index: 999;
@@ -31,7 +31,7 @@
         class="rotate-scale-up-diag-1"
         style="
           text-align: center;
-          width: 50%;
+          width: 70%;
           margin: 20% auto;
           background: white;
         "
