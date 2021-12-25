@@ -43,17 +43,18 @@ export default {
   },
   methods: {
     openDoor(values) {
-      console.log("openDoor", values);
-      if (this.$route.query.serial_num && this.open) {
-        mhorder_Get({
-          serial_num: this.$route.query.serial_num,
-        }).then((res) => {
-          const toast = Toast.loading({
+      const toast = Toast.loading({
             duration: 0, // 持续展示 toast
             forbidClick: true,
             message: "开奖倒计时 1 秒",
-          });
-
+      });
+      console.log("openDoor", values);
+      const {serial_num, mh_num } = this.$route.query;
+      if (serial_num && this.open) {
+        mhorder_Get({
+          serial_num,
+          mh_num
+        }).then((res) => {
           let second = 1;
           const timer = setInterval(() => {
             second--;
@@ -71,8 +72,7 @@ export default {
                   theme: "round-button",
                   confirmButtonText: "再来一发",
                 }).then(() => {
-                  window.location.href =
-                    "http://kaoyan.since88.cn/wechat/authorize?returnUrl=lily&cId=766186421&dId=0";
+                 this.$route.go(-1);
                 });
               } else {
                 Dialog.alert({
@@ -81,8 +81,7 @@ export default {
                   theme: "round-button",
                   confirmButtonText: "再来一发",
                 }).then(() => {
-                  window.location.href =
-                    "http://kaoyan.since88.cn/wechat/authorize?returnUrl=lily&cId=766186421&dId=0";
+                  this.$route.go(-1);
                 });
               }
             }

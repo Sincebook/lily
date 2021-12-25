@@ -1,6 +1,6 @@
 <template>
   <div class="good">
-    <img class="itemImg" src="../assets/1.jpg" alt="" />
+    <img class="itemImg" src="../assets/rolife/5.jpg" alt="" />
     <van-cell
       center
       title="Since文创智慧盲盒"
@@ -29,26 +29,30 @@
 
     <van-divider>商品详情</van-divider>
     <div style="padding: 0 1em 1em; color: #333; font-size: 14px">
-      本品为幸运盲盒，由正版青壹坊惊喜盒组成。下单后将随机打开柜子，幸运者将有概率一键全开！同时提醒，有一定概率空奖。
+      本品为幸运盲盒，由正版青壹坊惊喜盒、若来Rolife系列盲盒、PopMart等组成。下单后将随机打开柜子，幸运者将有概率一键全开！同时提醒，有一定概率空奖。
     </div>
-    <van-cell
-      title="当前全开概率"
-      value-class="pro"
-      :value="pro + '‰'"
-    />
-    <img src="../assets/2.jpg" style="width: 100%" />
-    <img src="../assets/3.jpg" style="width: 100%" />
-    <van-cell title="查看排行榜" is-link to="/Rank">
-      <van-tag type="danger">new</van-tag>
+    <van-cell title="当前全开概率" value-class="pro" :value="pro + '‰'" />
+    <img src="../assets/treeinart/1.jpeg" style="width: 50%;float:left" />
+    <img src="../assets/3.jpg" style="width: 50%;float:left" />
+ <img src="../assets/rolife/3.jpg" style="width: 100%;float:left" />
+  <van-cell title="查看排行榜" is-link to="/Rank">
+      <van-tag type="danger" badge="9">new</van-tag>
     </van-cell>
     <since-footer />
     <br /><br /><br />
     <van-button
+      @click="createFive"
+      style="bottom: 0; position: fixed;width:30%;"
+      color="#7232dd"
+      >
+        五连抽
+      </van-button>
+    <van-button
       type="danger"
-      block
       @click="createOrder"
-      style="bottom: 0; position: fixed"
-      >立即购买</van-button>
+      style="bottom: 0;margin-left:30%;width:70%; position: fixed"
+      >立即购买</van-button
+    >
   </div>
 </template>
 <script>
@@ -112,14 +116,24 @@ export default {
     }).then(() => {});
   },
   methods: {
-    createOrder() {
+    createFive() {
+      this.createOrder(5);
+    },
+    createOrder(values) {
       if (this.$route.query.uId) {
+        const mh_num = values == 5? '5':''
+        Toast.loading({
+          message: "加载中...",
+          forbidClick: true,
+        });
         mhorders_Create({
           wxuser_id: this.$route.query.uId,
           cabinet_num: this.$route.query.cId,
+          mh_num
         }).then((res) => {
           if (res.code === "0") {
             let serial_num = res.data.serialNum;
+            Toast.clear();
             testpay({ serial_num }).then((res) => {
               console.log(res);
               let wx_package = res.data.package;
@@ -130,7 +144,8 @@ export default {
                 nonceStr,
                 wx_package,
                 paySign,
-                serial_num
+                serial_num,
+                mh_num
               );
             });
           } else {
@@ -184,4 +199,10 @@ export default {
 .pro {
   color: orange;
 }
+ .child {
+    width: 40px;
+    height: 40px;
+    background: #f2f3f5;
+    border-radius: 4px;
+  }
 </style>
