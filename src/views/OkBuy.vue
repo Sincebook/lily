@@ -72,7 +72,8 @@ export default {
                   theme: "round-button",
                   confirmButtonText: "再来一发",
                 }).then(() => {
-                 this.$route.go(-1);
+                 window.location.href =
+                    "http://kaoyan.since88.cn/wechat/authorize?returnUrl=lily&cId=766186421&dId=0";
                 });
               } else {
                 Dialog.alert({
@@ -81,7 +82,8 @@ export default {
                   theme: "round-button",
                   confirmButtonText: "再来一发",
                 }).then(() => {
-                  this.$route.go(-1);
+                  window.location.href =
+                    "http://kaoyan.since88.cn/wechat/authorize?returnUrl=lily&cId=766186421&dId=0";
                 });
               }
             }
