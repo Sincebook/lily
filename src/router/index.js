@@ -32,6 +32,7 @@ import treeart from '../views/Fashions/treeart'
 import mine from '../views/Fashions/mine'
 import address from '../views/Fashions/address'
 import result from '../views/Fashions/result'
+import NewBuy from '../views/NewBuy'
 Vue.use(VueRouter)
 
 const routes = [
@@ -184,6 +185,11 @@ const routes = [
     path: '/Fashions/result',
     name: '开奖',
     component: result
+  },
+  {
+    path: '/NewBuy',
+    name: '特食特爱',
+    component: NewBuy
   }
 ]
 
