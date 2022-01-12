@@ -27,7 +27,7 @@
               ? '已支付'
               : '未完成'
           "
-          :label="'购买时间：' + formatDate(Number(order.uptime)) + ''"
+          :label="'购买时间：' + formatDate(Number(order.uptime)) + ' 联系电话：'+order.phone"
         />
       </van-cell-group>
       <br />
@@ -82,6 +82,7 @@ export default {
   },
   created() {
     orders_Find({ shopper_id: sessionStorage.getItem('shopper_id') }).then((res) => {
+      console.log(res)
       this.orders = res.data;
       this.theOrders = JSON.parse(JSON.stringify(res.data));
     });

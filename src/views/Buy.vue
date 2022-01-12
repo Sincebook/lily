@@ -12,14 +12,14 @@
     <div class="message">
       <van-notice-bar
   left-icon="volume-o"
-  text="因本品属于医疗产品，为了更好的跟踪服务，请您填写相关信息。"
+  text="因本品属于特殊产品，为了更好的跟踪服务，请您填写相关信息。"
 />
       <van-form>
         <van-field
           v-model.trim="order.trace_num"
           name="trace_num"
-          label="产品服务号"
-          placeholder="请填写产品服务跟踪号"
+          label="产品跟踪服务号"
+          placeholder="请填写产品跟踪服务号"
           required
         />
         <van-field
