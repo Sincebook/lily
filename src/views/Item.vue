@@ -88,6 +88,7 @@ export default {
           wxuser_id: this.$route.query.uId,
           cabinet_num: this.$route.query.cId,
           cabinetdoor_num: this.$route.query.dId,
+          shopper_secret: this.$route.query.sps
         }).then((res) => {
           if (res.code === "0") {
             let serial_num = res.data.serialNum;
